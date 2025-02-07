@@ -94,7 +94,7 @@ const Home = () => {
       <div
         className="h-[80vh] bg-cover bg-center relative"
         style={{
-          backgroundImage: 'url("https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?ixlib=rb-4.0.3&auto=format&fit=crop&w=2021&q=80")'
+          backgroundImage: 'url("./images/homeHeroBg.jpg")'
         }}
       >
         <div className="custom-overlay" />

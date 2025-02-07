@@ -1,38 +1,22 @@
 import { Search, MapPin } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { getAllPlaces } from '../utils/exploreFetcher';
 
 const Explore = () => {
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
+  const [destinations, setDestinations] = useState<any>([]);
 
-  const destinations = [
-    {
-      name: 'Paris, France',
-      description: 'The City of Light featuring iconic landmarks and rich culture',
-      image: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
-      rating: 4.8,
-      price: '€200/night',
-      category: 'city'
-    },
-    {
-      name: 'Tokyo, Japan',
-      description: 'A fascinating blend of traditional culture and modern technology',
-      image: 'https://images.unsplash.com/photo-1503899036084-c55cdd92da26?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
-      rating: 4.9,
-      price: '¥25000/night',
-      category: 'mountain'
-    },
-    {
-      name: 'New York, USA',
-      description: 'The city that never sleeps with endless entertainment options',
-      image: 'https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
-      rating: 4.7,
-      price: '$250/night',
-      category: 'beach'
+  useEffect(() => {
+    const fetchAllPlaces = async () => {
+      const getDestinations = await getAllPlaces();
+      setDestinations(getDestinations);
     }
-  ];
 
-  const filteredDestinations = destinations.filter(destination =>
+    fetchAllPlaces();
+  }, []);
+
+  const filteredDestinations = destinations.filter((destination: { category: string; name: string; }) =>
     (categoryFilter === 'all' || destination.category === categoryFilter) &&
     destination.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -58,20 +42,32 @@ const Explore = () => {
             onChange={(e) => setCategoryFilter(e.target.value)}
           >
             <option value="all">All Categories</option>
-            {destinations.map((destination, index) => (
+            {destinations.map((destination: { category: any }, index: any) => (
               <option value={destination.category} key={index}>{destination.category}</option>
             ))}
           </select>
         </div>
       </div>
 
+      {filteredDestinations.length === 0 && (
+        <div className="flex flex-col items-center justify-center text-center py-10">
+          <img
+            src="https://icons.veryicon.com/png/o/miscellaneous/template-3/no-order.png" // Add an appropriate image in the public folder
+            alt="No Places Available"
+            className="w-60 h-60 object-contain"
+          />
+          <h2 className="text-2xl font-semibold text-gray-700 mt-4">No Places Found</h2>
+          <p className="text-gray-500 text-sm mt-2">Try searching with a different filter or check back later.</p>
+        </div>
+      )}
+
       {/* Destinations Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {filteredDestinations.map((destination, index) => (
+        {filteredDestinations.map((destination: any, index: any) => (
           <div key={index} className="bg-white rounded-lg shadow-md overflow-hidden">
             <div className="relative h-48">
               <img
-                src={destination.image}
+                src={destination.img}
                 alt={destination.name}
                 className="w-full h-full object-cover"
               />
@@ -79,9 +75,9 @@ const Explore = () => {
             <div className="p-6">
               <div className="flex items-center justify-between mb-2">
                 <h3 className="text-xl font-semibold">{destination.name}</h3>
-                <span className="text-sm font-medium text-blue-600">{destination.price}</span>
+                <span className="text-sm font-medium text-blue-600">{destination.category}</span>
               </div>
-              <p className="text-gray-600 mb-4">{destination.description}</p>
+              <p className="text-gray-600 mb-4">{destination.description.slice(0, 100)}...</p>
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-1">
                   <MapPin className="h-4 w-4 text-gray-400" />

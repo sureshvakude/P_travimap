@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Compass, Map, Image, User, LogIn, Menu, X, Calendar } from 'lucide-react';
+import useAuth from '../hooks/userAuth';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const { user } = useAuth();
 
   return (
     <nav className="bg-white shadow-lg">
@@ -11,8 +13,8 @@ const Navbar = () => {
         <div className="flex justify-between h-16">
           <div className="flex items-center">
             <Link to="/" className="flex items-center space-x-2">
-              <Compass className="h-8 w-8 text-blue-600" />
-              <span className="text-xl font-bold text-gray-900">Travimap</span>
+              <img src='./icons/logo.png' alt='logo' className='w-10 h-10' />
+              <span className="text-xl font-bold text-gray-900">{import.meta.env.VITE_APP_NAME || `Travimap`}</span>
             </Link>
           </div>
 
@@ -34,14 +36,19 @@ const Navbar = () => {
               <Image className="h-5 w-5" />
               <span>Gallery</span>
             </Link>
-            <Link to="/login" className="text-gray-600 hover:text-blue-600 flex items-center space-x-1">
-              <LogIn className="h-5 w-5" />
-              <span>Login</span>
-            </Link>
-            <Link to="/profile" className="text-gray-600 hover:text-blue-600 flex items-center space-x-1">
-              <User className="h-5 w-5" />
-              <span>Profile</span>
-            </Link>
+            {
+              user ? (
+                <Link to="/profile" className="text-gray-600 hover:text-blue-600 flex items-center space-x-1">
+                  <User className="h-5 w-5" />
+                  <span>Profile</span>
+                </Link>
+              ) : (
+                <Link to="/login" className="text-gray-600 hover:text-blue-600 flex items-center space-x-1">
+                  <LogIn className="h-5 w-5" />
+                  <span>Login</span>
+                </Link>
+              )
+            }
           </div>
 
           {/* Mobile Menu Button */}
@@ -75,14 +82,19 @@ const Navbar = () => {
                 <Image className="h-5 w-5" />
                 <span>Gallery</span>
               </Link>
-              <Link to="/login" className="text-gray-600 hover:text-blue-600 flex items-center space-x-1">
-                <LogIn className="h-5 w-5" />
-                <span>Login</span>
-              </Link>
-              <Link to="/profile" className="text-gray-600 hover:text-blue-600 flex items-center space-x-1">
-                <User className="h-5 w-5" />
-                <span>Profile</span>
-              </Link>
+              {
+                user ? (
+                  <Link to="/profile" className="text-gray-600 hover:text-blue-600 flex items-center space-x-1">
+                    <User className="h-5 w-5" />
+                    <span>Profile</span>
+                  </Link>
+                ) : (
+                  <Link to="/login" className="text-gray-600 hover:text-blue-600 flex items-center space-x-1">
+                    <LogIn className="h-5 w-5" />
+                    <span>Login</span>
+                  </Link>
+                )
+              }
             </div>
           </div>
         )}
