@@ -5,7 +5,8 @@ import { getUserPosts } from '../utils/postsFetcher';
 
 const Profile = () => {
   const [user, setUser] = useState<any>(null);
-  const [posts, setPosts] = useState<any>(null);
+  const [posts, setPosts] = useState<any>([]);
+  const [trips, setTrips] = useState<any>([]);
   const { user: authUser } = useAuth();
 
   useEffect(() => {
@@ -67,6 +68,11 @@ const Profile = () => {
           <div>
             <h3 className="text-xl font-semibold mb-4">Upcoming Trips</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {trips.length === 0 && (
+                <div>
+                  <img src='/images/noUpcomingPlan.png' alt='no trip plan' className='w-36 h-36'/>
+                </div>
+              )}
               {/* {user?.trips.map((trip: any, index: any) => (
                 <div key={index} className="bg-gray-50 rounded-lg p-4 flex items-center space-x-4">
                   <img
@@ -87,6 +93,11 @@ const Profile = () => {
           <div className="mt-8">
             <h3 className="text-xl font-semibold mb-4">Travel Photos</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {posts.length === 0 && (
+                <div>
+                <img src='/images/noPost.png' alt='no trip plan' className='w-36 h-36'/>
+              </div>
+              )}
               {posts?.map((post: any, index: any) => (
                 <div key={index} className="relative group">
                   <div className="aspect-square bg-gray-100 rounded-lg overflow-hidden">

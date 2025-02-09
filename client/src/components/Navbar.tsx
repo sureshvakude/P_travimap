@@ -24,13 +24,9 @@ const Navbar = () => {
               <Compass className="h-5 w-5" />
               <span>Explore</span>
             </Link>
-            <Link to="/routes" className="text-gray-600 hover:text-blue-600 flex items-center space-x-1">
+            <Link to="/trips" className="text-gray-600 hover:text-blue-600 flex items-center space-x-1">
               <Map className="h-5 w-5" />
-              <span>Routes</span>
-            </Link>
-            <Link to="/planner" className="text-gray-600 hover:text-blue-600 flex items-center space-x-1">
-              <Calendar className="h-5 w-5" />
-              <span>Trip Planner</span>
+              <span>Trips</span>
             </Link>
             <Link to="/gallery" className="text-gray-600 hover:text-blue-600 flex items-center space-x-1">
               <Image className="h-5 w-5" />
@@ -44,7 +40,7 @@ const Navbar = () => {
                     <span>Profile</span>
                   </Link>
                   <button onClick={logout} className="text-gray-600 hover:text-blue-600 flex items-center space-x-1 cursor-pointer">
-                    <LogOut className='h-5 w-5'/>
+                    <LogOut className='h-5 w-5' />
                     <span>Logout</span>
                   </button>
                 </>

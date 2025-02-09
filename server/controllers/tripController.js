@@ -4,6 +4,7 @@ const Trip = require('../models/Trip');
 exports.createTrip = async (req, res) => {
     try {
         const trip = new Trip(req.body);
+        console.log(trip);
         await trip.save();
         res.status(201).json(trip);
     } catch (error) {

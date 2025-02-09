@@ -23,7 +23,7 @@ const TripExplore = ({ trip }: { trip: any }) => {
             <div className="mt-4">
                 <h3 className="text-lg font-semibold">Explore Places</h3>
                 <ul className="list-disc pl-6 text-gray-700">
-                    {trip.explorePlaces.map((place: any, index: any) => (
+                    {trip.explorePlaces?.map((place: any, index: any) => (
                         <div className='flex items-center'>
                             <MapPin className='h-4 w-4 text-gray-400 mr-2' />
                             <span key={index}>{place}</span>

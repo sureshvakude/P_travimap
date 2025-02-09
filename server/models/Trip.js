@@ -9,11 +9,11 @@ const TripSchema = new mongoose.Schema({
     budget: { type: Number, required: true },
     explorePlaces: [{ type: String }],
     itinerary: [{
-        day: { type: Number, required: true },
+        day: { type: Number },
         activities: [{
-            time: { type: String, required: true },
-            description: { type: String, required: true },
-            cost: { type: Number, required: true }
+            time: { type: String },
+            description: { type: String },
+            cost: { type: Number }
         }]
     }],
     type: { type: String, enum: ['private', 'public'], required: true },

@@ -1,7 +1,8 @@
-import { Clock, MapPin, Route, User } from 'lucide-react';
+import { Clock, MapPin, PlusCircle, Route, User } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { getAllTrips } from '../utils/tripFetcher';
 import TripExplore from '../components/tripExplore';
+import { Link } from 'react-router-dom';
 
 const Routes = () => {
   const [trips, SetTrips] = useState<any>(null);
@@ -31,7 +32,13 @@ const Routes = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
-      <h2 className="text-3xl font-bold text-center mb-12">Upcoming Trips</h2>
+      <div className="flex justify-between items-center mb-8">
+        <h2 className="text-3xl font-bold">Upcoming Trips</h2>
+        <Link className="flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors cursor-pointer" to="/trip-plan">
+          <PlusCircle className="h-5 w-5 mr-2" />
+          Create Trip Plan
+        </Link>
+      </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {trips && trips?.map((trip: any, index: any) => (
           <div key={index} className="bg-white rounded-lg shadow-md overflow-hidden">

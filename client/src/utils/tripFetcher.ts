@@ -10,3 +10,13 @@ export const getAllTrips = async () => {
         throw error;
     }
 }
+
+export const addTrip = async (data: any) => {
+    try {
+        const response = await axios.post(`${apiUrl}/trips`, data);
+        return response;
+    } catch (error) {
+        console.error("Failed to add trip", error);
+        throw error;
+    }
+};

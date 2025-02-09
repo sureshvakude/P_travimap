@@ -5,7 +5,7 @@ import Home from './pages/Home';
 import Navbar from './components/Navbar';
 import Explore from './pages/Explore';
 import Footer from './components/Footer';
-import TripPlanner from './pages/TripPlanner';
+import TripPlanner from './components/TripPlanner';
 import TravelRoutes from './pages/Routes';
 import Gallery from './pages/Gallery';
 import Signup from './components/Signup';
@@ -21,9 +21,9 @@ function App() {
         <RouterRoutes>
           <Route path='/' element={<Home />} />
           <Route path="/explore" element={<Explore />} />
-          <Route path="/routes" element={<TravelRoutes />} />
+          <Route path="/trips" element={<TravelRoutes />} />
           <Route path="/gallery" element={<Gallery />} />
-          <Route path="/planner" element={<TripPlanner />} />
+          <Route path="/trip-plan" element={<TripPlanner />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/profile" element={<Profile />} />

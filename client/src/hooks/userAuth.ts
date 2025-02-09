@@ -34,8 +34,8 @@ const useAuth = () => {
 
   const getUser = () => {
     const storedUser = localStorage.getItem("travi_user");
-    return storedUser
-  }
+    return storedUser ? JSON.parse(storedUser) : null;
+  };
 
   return { user, login, logout, getUser };
 };
