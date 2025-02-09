@@ -4,14 +4,14 @@ const User = require('../models/User');
 
 // Create New User
 const signupUser = async (req, res) => {
-    const { username, email, password, mobileNumber, gender, DOB, role, profilePicture, profileBackground } = req.body;
+    const { username, email, password, mobileNumber, gender, DOB, role, profilePicture, profileBackground,address } = req.body;
 
     try {
         const existingUser = await User.findOne({ email });
         if (existingUser) {
             return res.status(400).json({ message: 'User already exists' });
         }
-        const newUser = await User.create({ username, email, password, mobileNumber, gender, DOB, role, profilePicture, profileBackground });
+        const newUser = await User.create({ username, email, password, mobileNumber, gender, DOB, role, profilePicture, profileBackground, address });
         res.status(201).json(newUser);
     }
     catch (error) {
@@ -95,7 +95,7 @@ const getAllUsers = async (req, res) => {
 // Update User
 const updateUser = async (req, res) => {
     const { _id } = req.params;
-    const { username, email, mobileNumber, gender, DOB, profilePicture, profileBackground, password } = req.body;
+    const { username, email, mobileNumber, gender, DOB, profilePicture, profileBackground, password, address } = req.body;
 
     if (!_id.match(/^[0-9a-fA-F]{24}$/)) {
         return res.status(400).json({ message: "Invalid user ID format" });
@@ -114,6 +114,7 @@ const updateUser = async (req, res) => {
         user.DOB = DOB || user.DOB;
         user.profilePicture = profilePicture || user.profilePicture;
         user.profileBackground = profileBackground || user.profileBackground;
+        user.address = address || user.address;
 
         // Hash password if updated
         if (password) {

@@ -6,6 +6,9 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    address:{
+        type:String,
+    },
     email: {
         type: String,
         required: true,
@@ -22,11 +25,11 @@ const UserSchema = new mongoose.Schema({
         match: [/^\d{10}$/, 'Please enter a valid 10-digit mobile number']
     },
     followers: {
-        type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+        type: [{ String }],
         default: []
     },
     follow: {
-        type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+        type: [{ String }],
         default: []
     },
     gender: {

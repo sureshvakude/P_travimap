@@ -14,3 +14,13 @@ export const loginUser = async (email: string, password: string) => {
         throw error;
     }
 };
+
+export const getUser = async (id: string) => {
+    try {
+        const response = await axios.get(`${apiUrl}/users/${id}`);
+        return response.data
+    } catch (error) {
+        console.error("Failed to get user: ", error);
+        throw error;
+    }
+}

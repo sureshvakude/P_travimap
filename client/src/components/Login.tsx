@@ -9,7 +9,6 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
-  const [userImage, setUserImage] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { login } = useAuth();
@@ -21,10 +20,9 @@ const Login = () => {
 
     try {
       const userData = await loginUser(email, password);
-      login(userData);
-      setUserImage(userData.img)
-      navigate("/");
+      login(userData.user);
       setLoading(false);
+      navigate("/");
     } catch (err) {
       setLoading(false);
       setError("Invalid email or password. Please try again.");
@@ -43,13 +41,9 @@ const Login = () => {
         className="max-w-md w-full space-y-8 bg-white p-10 rounded-2xl shadow-xl"
       >
         <div className="flex flex-col items-center">
-          {userImage ? (
-            <img src={userImage} alt="User" className="w-20 h-20 rounded-full mb-4" />
-          ) : (
-            <div className="w-20 h-20 bg-gray-300 rounded-full flex items-center justify-center mb-4">
-              <span className="text-gray-700 text-lg">👤</span>
-            </div>
-          )}
+          <div className="w-20 h-20 bg-gray-300 rounded-full flex items-center justify-center mb-4">
+            <span className="text-gray-700 text-lg">👤</span>
+          </div>
           <h2 className="text-3xl font-extrabold text-gray-900">Welcome Back</h2>
           <p className="text-sm text-gray-600">
             New here?{" "}

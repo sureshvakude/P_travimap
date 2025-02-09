@@ -1,4 +1,4 @@
-import { Facebook, Twitter, Instagram, Youtube, Compass } from 'lucide-react';
+import { Facebook, Twitter, Instagram, Youtube } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const Footer = () => {
@@ -8,8 +8,8 @@ const Footer = () => {
             <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
                 <div>
                     <div className="flex items-center space-x-2 mb-4">
-                        <Compass className="h-8 w-8 text-blue-400" />
-                        <span className="text-xl font-bold">TravelMate</span>
+                    <img src='./icons/logo.png' alt='logo' className='w-10 h-10' />
+                        <span className="text-xl font-bold">{import.meta.env.VITE_APP_NAME || `Travimap`}</span>
                     </div>
                     <p className="text-gray-400">
                         Your trusted companion for exploring the wonders of India.

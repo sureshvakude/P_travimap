@@ -1,11 +1,13 @@
 import { Search, MapPin } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { getAllPlaces } from '../utils/exploreFetcher';
+import PlaceExplore from '../components/placeExplore';
 
 const Explore = () => {
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [destinations, setDestinations] = useState<any>([]);
+  const [selectedDestination, setSelectedDestination] = useState<any>(null);
 
   useEffect(() => {
     const fetchAllPlaces = async () => {
@@ -20,6 +22,15 @@ const Explore = () => {
     (categoryFilter === 'all' || destination.category === categoryFilter) &&
     destination.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  if (selectedDestination) {
+    return (
+      <>
+        <PlaceExplore place={selectedDestination} />
+        <button className='w-full py-2 bg-gray-800 text-white cursor-pointer' onClick={()=>setSelectedDestination(null)}>Back</button>
+      </>
+    )
+  }
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
@@ -49,6 +60,7 @@ const Explore = () => {
         </div>
       </div>
 
+      {/* Destination is empty */}
       {filteredDestinations.length === 0 && (
         <div className="flex flex-col items-center justify-center text-center py-10">
           <img
@@ -60,11 +72,10 @@ const Explore = () => {
           <p className="text-gray-500 text-sm mt-2">Try searching with a different filter or check back later.</p>
         </div>
       )}
-
       {/* Destinations Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {filteredDestinations.map((destination: any, index: any) => (
-          <div key={index} className="bg-white rounded-lg shadow-md overflow-hidden">
+          <div key={index} className="bg-white rounded-lg shadow-md overflow-hidden cursor-pointer" onClick={() => setSelectedDestination(destination)}>
             <div className="relative h-48">
               <img
                 src={destination.img}
