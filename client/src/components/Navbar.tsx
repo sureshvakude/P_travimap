@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Compass, Map, Image, User, LogIn, Menu, X, Calendar, LogOut } from 'lucide-react';
+import { Compass, Map, Image, User, LogIn, Menu, X, Calendar } from 'lucide-react';
 import useAuth from '../hooks/userAuth';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { user, logout } = useAuth();
+  const { isLoggedIn } = useAuth();
 
   return (
     <nav className="bg-white shadow-lg">
@@ -33,16 +33,12 @@ const Navbar = () => {
               <span>Gallery</span>
             </Link>
             {
-              user ? (
+              isLoggedIn() ? (
                 <>
                   <Link to="/profile" className="text-gray-600 hover:text-blue-600 flex items-center space-x-1">
                     <User className="h-5 w-5" />
                     <span>Profile</span>
                   </Link>
-                  <button onClick={logout} className="text-gray-600 hover:text-blue-600 flex items-center space-x-1 cursor-pointer">
-                    <LogOut className='h-5 w-5' />
-                    <span>Logout</span>
-                  </button>
                 </>
               ) : (
                 <Link to="/login" className="text-gray-600 hover:text-blue-600 flex items-center space-x-1">
@@ -85,7 +81,7 @@ const Navbar = () => {
                 <span>Gallery</span>
               </Link>
               {
-                user ? (
+                isLoggedIn() ? (
                   <Link to="/profile" className="text-gray-600 hover:text-blue-600 flex items-center space-x-1">
                     <User className="h-5 w-5" />
                     <span>Profile</span>

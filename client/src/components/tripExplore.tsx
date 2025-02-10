@@ -10,7 +10,7 @@ const TripExplore = ({ trip }: { trip: any }) => {
     };
 
     return (
-        <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-lg">
+        <div className="md:max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-lg">
             <img src={import.meta.env.VITE_API_URL + trip.img} alt={trip.name} className="w-full h-64 object-cover rounded-lg" />
             <h2 className="text-3xl font-bold mt-4">{trip.name}</h2>
             <p className="text-gray-600 mt-2">{trip.destination}</p>

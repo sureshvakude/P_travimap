@@ -37,7 +37,12 @@ const useAuth = () => {
     return storedUser ? JSON.parse(storedUser) : null;
   };
 
-  return { user, login, logout, getUser };
+  const isLoggedIn = () => {
+    const storedUser = localStorage.getItem("travi_user");
+    return storedUser ? true : false;
+  }
+
+  return { user, login, logout, getUser, isLoggedIn };
 };
 
 export default useAuth;

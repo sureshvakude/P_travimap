@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes as RouterRoutes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes as RouterRoutes, Route, Navigate } from 'react-router-dom';
 
 //components
 import Home from './pages/Home';
@@ -12,6 +12,13 @@ import Signup from './components/Signup';
 import Login from './components/Login';
 import Profile from './pages/Profile';
 import NotFound from './components/NotFound';
+import useAuth from './hooks/userAuth';
+
+// Private Route Component
+const PrivateRoute = ({ element }: { element: any }) => {
+  const { isLoggedIn } = useAuth();
+  return isLoggedIn() ? element : <Navigate to="/" replace />;
+};
 
 function App() {
   return (
@@ -23,13 +30,15 @@ function App() {
           <Route path="/explore" element={<Explore />} />
           <Route path="/trips" element={<TravelRoutes />} />
           <Route path="/gallery" element={<Gallery />} />
-          <Route path="/trip-plan" element={<TripPlanner />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="*" element={<NotFound />} /> {/* 404 Route */}
+          {/* Protected Routes */}
+          <Route path="/trip-plan" element={<PrivateRoute element={<TripPlanner />} />} />
+          <Route path="/profile" element={<PrivateRoute element={<Profile />} />} />
+          {/* 404 Route */}
+          <Route path="*" element={<NotFound />} />
         </RouterRoutes>
-        <Footer/>
+        <Footer />
       </div>
     </Router>
   )

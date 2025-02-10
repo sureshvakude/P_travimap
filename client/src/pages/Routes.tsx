@@ -13,7 +13,6 @@ const Routes = () => {
       try {
         const getTrips = await getAllTrips();
         SetTrips(getTrips.data);
-        console.log(getTrips);
       } catch (error) {
         console.error(error);
       }

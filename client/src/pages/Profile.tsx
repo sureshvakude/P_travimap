@@ -1,13 +1,29 @@
-import { Settings, MapPin, Calendar, Camera } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { Settings, MapPin, Calendar, Camera, LogOut } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
 import useAuth from '../hooks/userAuth';
 import { getUserPosts } from '../utils/postsFetcher';
+import { useNavigate } from 'react-router-dom';
 
 const Profile = () => {
   const [user, setUser] = useState<any>(null);
   const [posts, setPosts] = useState<any>([]);
   const [trips, setTrips] = useState<any>([]);
   const { user: authUser } = useAuth();
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement | null>(null);
+  const { logout } = useAuth();
+  const navigate = useNavigate();
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   useEffect(() => {
     if (authUser) {
@@ -25,6 +41,11 @@ const Profile = () => {
     fetchePosts();
   }, [user]);
 
+  const handleSignout = () => {
+    logout();
+    navigate("/");
+  }
+
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
       <div className="bg-white rounded-lg shadow-md overflow-hidden">
@@ -32,22 +53,41 @@ const Profile = () => {
         <div
           className="relative h-48 bg-gradient-to-r from-blue-500 to-purple-500"
           style={{
-            backgroundImage: `url(${user?.profileBackground})`, // Add your image URL
-            backgroundSize: 'cover', // Ensure the image covers the entire div
-            backgroundPosition: 'center', // Center the image
-            backgroundBlendMode: 'overlay', // Blend the gradient with the image
+            backgroundImage: `url(${user?.profileBackground || ""})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundBlendMode: "overlay",
           }}
         >
+          {/* Profile Picture */}
           <div className="absolute -bottom-16 left-8">
             <img
-              src={user?.profilePicture}
-              alt={user?.username}
+              src={user?.profilePicture || "/default-avatar.png"}
+              alt={user?.username || "User"}
               className="w-32 h-32 rounded-full border-4 border-white"
             />
           </div>
-          <button className="absolute top-4 right-4 p-2 bg-white rounded-full shadow-md">
-            <Settings className="h-5 w-5 text-gray-600" />
-          </button>
+
+          {/* Settings Button */}
+          <div ref={dropdownRef} className="absolute top-4 right-4">
+            <button
+              className="p-2 bg-white rounded-full shadow-md cursor-pointer"
+              onClick={() => setIsOpen(!isOpen)}
+              aria-label="Settings"
+            >
+              <Settings className="h-5 w-5 text-gray-600" />
+            </button>
+
+            {/* Dropdown Menu */}
+            {isOpen && (
+              <div className="absolute right-0 mt-2 w-40 bg-white shadow-lg rounded-md py-2">
+                <button onClick={handleSignout} className="text-gray-600 hover:text-blue-600 flex items-center space-x-1 cursor-pointer text-center ml-2">
+                  <LogOut className='h-5 w-5' />
+                  <span>Logout</span>
+                </button>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Profile Info */}
@@ -70,7 +110,7 @@ const Profile = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {trips.length === 0 && (
                 <div>
-                  <img src='/images/noUpcomingPlan.png' alt='no trip plan' className='w-36 h-36'/>
+                  <img src='/images/noUpcomingPlan.png' alt='no trip plan' className='w-36 h-36' />
                 </div>
               )}
               {/* {user?.trips.map((trip: any, index: any) => (
@@ -95,8 +135,8 @@ const Profile = () => {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {posts.length === 0 && (
                 <div>
-                <img src='/images/noPost.png' alt='no trip plan' className='w-36 h-36'/>
-              </div>
+                  <img src='/images/noPost.png' alt='no trip plan' className='w-36 h-36' />
+                </div>
               )}
               {posts?.map((post: any, index: any) => (
                 <div key={index} className="relative group">
