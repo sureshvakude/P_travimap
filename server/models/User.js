@@ -51,11 +51,11 @@ const UserSchema = new mongoose.Schema({
     },
     profilePicture: {
         type: String,
-        default: ''
+        default: '/uploads/default-avatar.png'
     },
     profileBackground: {
         type: String,
-        default: ''
+        default: '/uploads/default-avatar-bg.png'
     },
 }, {
     timestamps: true

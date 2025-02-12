@@ -53,7 +53,7 @@ const Profile = () => {
         <div
           className="relative h-48 bg-gradient-to-r from-blue-500 to-purple-500"
           style={{
-            backgroundImage: `url(${user?.profileBackground || ""})`,
+            backgroundImage: `url(${user?.profileBackground || "https://www.holidify.com/images/bgImages/MUNNAR.jpg"})`,
             backgroundSize: "cover",
             backgroundPosition: "center",
             backgroundBlendMode: "overlay",
@@ -62,7 +62,7 @@ const Profile = () => {
           {/* Profile Picture */}
           <div className="absolute -bottom-16 left-8">
             <img
-              src={user?.profilePicture || "/default-avatar.png"}
+              src={user?.profilePicture || "/images/default.png"}
               alt={user?.username || "User"}
               className="w-32 h-32 rounded-full border-4 border-white"
             />

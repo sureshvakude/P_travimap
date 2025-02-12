@@ -1,11 +1,17 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { Compass, Map, Image, User, LogIn, Menu, X, Calendar } from 'lucide-react';
 import useAuth from '../hooks/userAuth';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isLogin, setIsLoggin] = useState(false);
   const { isLoggedIn } = useAuth();
+  const location = useLocation();
+
+  useEffect(() => {
+    setIsLoggin(isLoggedIn());
+  }, [location.pathname]);
 
   return (
     <nav className="bg-white shadow-lg">
@@ -13,7 +19,7 @@ const Navbar = () => {
         <div className="flex justify-between h-16">
           <div className="flex items-center">
             <Link to="/" className="flex items-center space-x-2">
-              <img src='./icons/logo.png' alt='logo' className='w-10 h-10' />
+              <img src='./icons/logo.png' alt='logo' className='w-12 h-12' />
               <span className="text-xl font-bold text-gray-900">{import.meta.env.VITE_APP_NAME || `Travimap`}</span>
             </Link>
           </div>
@@ -33,7 +39,7 @@ const Navbar = () => {
               <span>Gallery</span>
             </Link>
             {
-              isLoggedIn() ? (
+              isLogin ? (
                 <>
                   <Link to="/profile" className="text-gray-600 hover:text-blue-600 flex items-center space-x-1">
                     <User className="h-5 w-5" />
@@ -81,7 +87,7 @@ const Navbar = () => {
                 <span>Gallery</span>
               </Link>
               {
-                isLoggedIn() ? (
+                isLogin ? (
                   <Link to="/profile" className="text-gray-600 hover:text-blue-600 flex items-center space-x-1">
                     <User className="h-5 w-5" />
                     <span>Profile</span>
