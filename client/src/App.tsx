@@ -6,19 +6,13 @@ import Navbar from './components/Navbar';
 import Explore from './pages/Explore';
 import Footer from './components/Footer';
 import TripPlanner from './components/TripPlanner';
-import TravelRoutes from './pages/Routes';
+import TravelRoutes from './pages/Trips';
 import Gallery from './pages/Gallery';
 import Signup from './components/Signup';
 import Login from './components/Login';
 import Profile from './pages/Profile';
 import NotFound from './components/NotFound';
 import useAuth from './hooks/userAuth';
-
-// Private Route Component
-const PrivateRoute = ({ element }: { element: any }) => {
-  const { isLoggedIn } = useAuth();
-  return isLoggedIn() ? element : <Navigate to="/" replace />;
-};
 
 function App() {
   return (
@@ -35,8 +29,7 @@ function App() {
           {/* Protected Routes */}
           <Route path="/trip-plan" element={<PrivateRoute element={<TripPlanner />} />} />
           <Route path="/profile" element={<PrivateRoute element={<Profile />} />} />
-          {/* 404 Route */}
-          <Route path="*" element={<NotFound />} />
+          <Route path="*" element={<NotFound />} /> {/* 404 Route */}
         </RouterRoutes>
         <Footer />
       </div>
@@ -45,3 +38,9 @@ function App() {
 }
 
 export default App
+
+// Private Route Component
+const PrivateRoute = ({ element }: { element: any }) => {
+  const { isLoggedIn } = useAuth();
+  return isLoggedIn() ? element : <Navigate to="/" replace />;
+};

@@ -20,3 +20,13 @@ export const getUserPosts = async (id:string) => {
         throw error;
     }
 }
+
+export const getPostById = async (id: string) => {
+    try{
+        const response = await axios.get(`${apiUrl}/posts/${id}`);
+        return response.data;
+    } catch(error){
+        console.error("Failed to get post");
+        throw error;
+    }
+}

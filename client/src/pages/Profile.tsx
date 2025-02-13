@@ -8,17 +8,18 @@ const Profile = () => {
   const [user, setUser] = useState<any>(null);
   const [posts, setPosts] = useState<any>([]);
   const [trips, setTrips] = useState<any>([]);
-  const { user: authUser } = useAuth();
-  const [isOpen, setIsOpen] = useState(false);
+
+  const [isSettingOpen, setIsSettingOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
-  const { logout } = useAuth();
+
+  const { logout, user: authUser } = useAuth();
   const navigate = useNavigate();
 
   // Close dropdown when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
+        setIsSettingOpen(false);
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
@@ -72,14 +73,14 @@ const Profile = () => {
           <div ref={dropdownRef} className="absolute top-4 right-4">
             <button
               className="p-2 bg-white rounded-full shadow-md cursor-pointer"
-              onClick={() => setIsOpen(!isOpen)}
+              onClick={() => setIsSettingOpen(!isSettingOpen)}
               aria-label="Settings"
             >
               <Settings className="h-5 w-5 text-gray-600" />
             </button>
 
             {/* Dropdown Menu */}
-            {isOpen && (
+            {isSettingOpen && (
               <div className="absolute right-0 mt-2 w-40 bg-white shadow-lg rounded-md py-2">
                 <button onClick={handleSignout} className="text-gray-600 hover:text-blue-600 flex items-center space-x-1 cursor-pointer text-center ml-2">
                   <LogOut className='h-5 w-5' />

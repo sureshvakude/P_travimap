@@ -1,4 +1,4 @@
-import { Clock, MapPin, Star, Users } from 'lucide-react';
+import { Clock, MapPin, Star } from 'lucide-react';
 import { useState } from 'react';
 
 const TripExplore = ({ trip }: { trip: any }) => {

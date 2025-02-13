@@ -5,7 +5,7 @@ import TripExplore from '../components/tripExplore';
 import { Link } from 'react-router-dom';
 
 const Routes = () => {
-  const [trips, SetTrips] = useState<any>(null);
+  const [trips, SetTrips] = useState<any>([]);
   const [selectedTrip, SetSelectedTrip] = useState(null);
 
   useEffect(() => {
@@ -32,12 +32,20 @@ const Routes = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-8">
-        <h2 className="text-3xl font-bold">Upcoming Trips</h2>
+        <h2 className="text-2xl md:text-3xl font-bold">Upcoming Trips</h2>
         <Link className="flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors cursor-pointer" to="/trip-plan">
           <PlusCircle className="h-5 w-5 mr-2" />
-          Create Trip Plan
+          Create Plan
         </Link>
       </div>
+
+      {trips.length === 0 && (
+        <div className='text-center'>
+          <img src='/images/noUpcomingPlan.png' alt='no trip plan' className='w-72 h-72 items-center mx-auto flex' />
+          <span className='text-gray-500 font-serif text-2xl'>There is no public trip plan</span>
+        </div>
+      )}
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {trips && trips?.map((trip: any, index: any) => (
           <div key={index} className="bg-white rounded-lg shadow-md overflow-hidden">
