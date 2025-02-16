@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Plus, Trash2, Save } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import useAuth from '../hooks/userAuth';
+import useAuth from '../contexts/userAuth';
 import { addTrip } from '../utils/tripFetcher';
 import { deleteImage, uploadImage } from '../utils/uploadImage';
 import axios from 'axios';

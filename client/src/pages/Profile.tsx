@@ -1,8 +1,8 @@
 import { Settings, MapPin, Calendar, Camera, LogOut } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
-import useAuth from '../hooks/userAuth';
+import useAuth from '../contexts/userAuth';
 import { getUserPosts } from '../utils/postsFetcher';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Profile = () => {
   const [user, setUser] = useState<any>(null);
@@ -140,13 +140,13 @@ const Profile = () => {
                 </div>
               )}
               {posts?.map((post: any, index: any) => (
-                <div key={index} className="relative group">
+                <Link to={`/post/explore/` + post._id} key={index} className="relative group">
                   <div className="aspect-square bg-gray-100 rounded-lg overflow-hidden">
                     <Camera className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 h-8 w-8 text-gray-400" />
-                    <img src={import.meta.env.VITE_API_URL + post.img[0]} alt={`posts` + index} className='w-full h-full' />
+                    <img src={post.img[0]} alt={`posts` + index} className='w-full h-full' />
                   </div>
                   <div className="absolute inset-0 group-hover:bg-opacity-20 transition-opacity rounde d-lg" />
-                </div>
+                </Link>
               ))}
             </div>
           </div>

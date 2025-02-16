@@ -1,13 +1,12 @@
 import { Search, MapPin } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { getAllPlaces } from '../utils/exploreFetcher';
-import PlaceExplore from '../components/placeExplore';
+import { Link } from 'react-router-dom';
 
 const Explore = () => {
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [destinations, setDestinations] = useState<any>([]);
-  const [selectedDestination, setSelectedDestination] = useState<any>(null);
 
   useEffect(() => {
     const fetchAllPlaces = async () => {
@@ -22,15 +21,6 @@ const Explore = () => {
     (categoryFilter === 'all' || destination.category === categoryFilter) &&
     destination.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
-
-  if (selectedDestination) {
-    return (
-      <>
-        <PlaceExplore place={selectedDestination} />
-        <button className='w-full py-2 bg-gray-800 text-white cursor-pointer' onClick={()=>setSelectedDestination(null)}>Back</button>
-      </>
-    )
-  }
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
@@ -75,7 +65,7 @@ const Explore = () => {
       {/* Destinations Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {filteredDestinations.map((destination: any, index: any) => (
-          <div key={index} className="bg-white rounded-lg shadow-md overflow-hidden cursor-pointer" onClick={() => setSelectedDestination(destination)}>
+          <Link key={index} className="bg-white rounded-lg shadow-md overflow-hidden cursor-pointer" to={`/place/explore/` + destination._id}>
             <div className="relative h-48">
               <img
                 src={destination.img}
@@ -100,7 +90,7 @@ const Explore = () => {
                 </div>
               </div>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
     </div>

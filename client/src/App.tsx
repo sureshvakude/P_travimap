@@ -12,7 +12,9 @@ import Signup from './components/Signup';
 import Login from './components/Login';
 import Profile from './pages/Profile';
 import NotFound from './components/NotFound';
-import useAuth from './hooks/userAuth';
+import useAuth from './contexts/userAuth';
+import ProfilePostExplore from './components/PostExplore';
+import PlaceExploreNew from './components/placeExplore';
 
 function App() {
   return (
@@ -26,6 +28,8 @@ function App() {
           <Route path="/gallery" element={<Gallery />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/post/explore/:id" element={<ProfilePostExplore />} />
+          <Route path="/place/explore/:id" element={<PlaceExploreNew />} />
           {/* Protected Routes */}
           <Route path="/trip-plan" element={<PrivateRoute element={<TripPlanner />} />} />
           <Route path="/profile" element={<PrivateRoute element={<Profile />} />} />

@@ -10,3 +10,13 @@ export const getAllPlaces = async () => {
         throw error;
     }
 }
+
+export const getPlaceById = async (id: string) => {
+    try {
+        const response = await axios.get(`${apiUrl}/places/${id}`);
+        return response;
+    } catch (error) {
+        console.error("Failed to get place");
+        throw error;
+    }
+}

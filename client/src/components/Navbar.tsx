@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Compass, Map, Image, User, LogIn, Menu, X, Calendar } from 'lucide-react';
-import useAuth from '../hooks/userAuth';
+import useAuth from '../contexts/userAuth';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);

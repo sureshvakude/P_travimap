@@ -32,7 +32,7 @@ const getPlaceById = async (req, res) => {
     }
 
     try {
-        const place = await Place.findById(_id).populate('userId').lean();
+        const place = await Place.findById(_id).lean();
         if (!place) return res.status(404).json({ message: "Place not found" });
         res.status(200).json(place);
     }

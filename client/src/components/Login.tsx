@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { loginUser } from '../utils/userFetcher';
-import useAuth from "../hooks/userAuth";
+import useAuth from "../contexts/userAuth";
 import { motion } from "framer-motion";
 import { Loader } from "lucide-react";
 
