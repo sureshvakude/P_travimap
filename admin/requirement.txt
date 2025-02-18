@@ -1,5 +1,0 @@
-django
-pillow
-dnspython
-djongo
-setuptools
