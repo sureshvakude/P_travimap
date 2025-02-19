@@ -1,5 +1,0 @@
-django
-pillow
-pytz
-six
-djongo
