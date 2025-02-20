@@ -1,24 +1,51 @@
 from django.contrib import admin
-from .models import Post, PostImage
+from django.utils.html import format_html
+from import_export.admin import ImportExportModelAdmin
+from import_export import resources, fields
+from import_export.widgets import ManyToManyWidget
+from .models import Post, PostImage, PostComment
 
+# Import/Export Resource Class
+class PostResource(resources.ModelResource):
+    images = fields.Field(column_name="images", attribute="images", widget=ManyToManyWidget(PostImage, field="image"))
+    comments = fields.Field(column_name="comments", attribute="comments", widget=ManyToManyWidget(PostComment, field="message"))
+
+    class Meta:
+        model = Post
+        fields = ('id', 'user', 'name', 'caption', 'likes', 'created_at', 'images', 'comments')
+
+    def dehydrate_images(self, post):
+        """Returns a comma-separated list of image URLs."""
+        return ", ".join([image.image.url for image in post.images.all()])
+
+    def dehydrate_comments(self, post):
+        """Returns comments with user info in export."""
+        return "; ".join([f"{comment.user.username}: {comment.message}" for comment in post.comments.all()])
+
+# Inline model for uploading multiple images
 class PostImageInline(admin.TabularInline):
     model = PostImage
-    extra = 1  # Number of empty fields to display for images
+    extra = 1  # Allows adding one image at a time in admin
 
-class PostAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'user', 'likes', 'created_at')
-    search_fields = ('name', 'caption', 'user__username')
-    list_filter = ('user', 'likes')
-    ordering = ('-created_at',)  # Order posts by creation date in descending order
+    def image_preview(self, obj):
+        return format_html(f'<img src="{obj.image.url}" width="100" height="60" />') if obj.image else ""
 
-    fieldsets = (
-        (None, {'fields': ('user', 'name', 'caption', 'likes', 'comments')}),
-        # No need to include 'created_at' because it's non-editable
-    )
+    image_preview.short_description = "Preview"
+    readonly_fields = ('image_preview',)
 
-    # Optionally, exclude 'created_at' field from form:
-    exclude = ('created_at',)  # This will prevent the field from being shown in the form
+# Inline model for adding comments
+class PostCommentInline(admin.TabularInline):
+    model = PostComment
+    extra = 1  # Allows adding one comment at a time
 
-    inlines = [PostImageInline]  # Allows adding multiple images for the post
+# Admin model with import/export functionality
+class PostAdmin(ImportExportModelAdmin, admin.ModelAdmin):
+    resource_class = PostResource  # Import/Export support
+    list_display = ('name', 'user', 'likes', 'created_at')
+    search_fields = ('name', 'user__username', 'caption')
+    list_filter = ('created_at',)
+    inlines = [PostImageInline, PostCommentInline]  # Allow image & comment uploads in admin
 
 admin.site.register(Post, PostAdmin)
+admin.site.register(PostImage)
+admin.site.register(PostComment)

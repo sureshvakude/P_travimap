@@ -1,38 +1,44 @@
 from django.db import models
-from django.contrib.auth.models import User
+from users.models import User  
+from places.models import Place  # Import Place model
 
 class Trip(models.Model):
-    class TripType(models.TextChoices):
-        PRIVATE = 'Private', 'Private'
-        PUBLIC = 'Public', 'Public'
+    TRIP_TYPES = [
+        ('public', 'Public'),
+        ('private', 'Private'),
+    ]
 
-    user = models.ForeignKey(User, related_name='trips', on_delete=models.CASCADE)  # Link to User model
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="trips")  # Trip creator
     name = models.CharField(max_length=255)
-    img = models.ImageField(upload_to='uploads/trip_images/')  # Single image for trip
     destination = models.CharField(max_length=255)
-    startDate = models.DateField()
-    endDate = models.DateField()
-    budget = models.DecimalField(max_digits=10, decimal_places=2)
-    explorePlaces = models.JSONField(default=list)  # Array of places to explore
-    itinerary = models.JSONField(default=list)  # Itinerary: list of days and activities
-    type = models.CharField(max_length=7, choices=TripType.choices)
-    tripMembers = models.ManyToManyField(User, related_name='trip_members')  # Multiple users
+    start_date = models.DateField()
+    end_date = models.DateField()
+    budget = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    explore_places = models.TextField(blank=True, null=True)
+    trip_type = models.CharField(max_length=10, choices=TRIP_TYPES, default='public')
+    trip_members = models.ManyToManyField(User, related_name="trip_members", blank=True)  # Users in the trip
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        db_table = 'trips'
+        db_table = "trips"
 
     def __str__(self):
         return self.name
 
-
-class Itinerary(models.Model):
-    trip = models.ForeignKey(Trip, related_name='itineraries', on_delete=models.CASCADE)  # Custom related_name here
-    day = models.PositiveIntegerField()  # Day number
-    activities = models.JSONField(default=list)  # List of activities for this day
-
-    class Meta:
-        db_table = 'trip_itinerary'  # New custom table name for the Itinerary model
+class TripImage(models.Model):
+    trip = models.ForeignKey(Trip, related_name="images", on_delete=models.CASCADE)
+    image = models.ImageField(upload_to="uploads/trips/")
 
     def __str__(self):
-        return f"Day {self.day} activities for {self.trip.name}"
+        return f"Image for {self.trip.name}"
+
+class Itinerary(models.Model):
+    trip = models.ForeignKey(Trip, related_name="itinerary", on_delete=models.CASCADE)
+    day = models.IntegerField()
+    activities = models.TextField()  # List of activities as a text field
+
+    class Meta:
+        ordering = ['day']
+
+    def __str__(self):
+        return f"Day {self.day} for {self.trip.name}"
