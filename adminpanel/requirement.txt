@@ -2,3 +2,4 @@ django
 mysqlclient
 django-import-export
 pillow
+python-dotenv
