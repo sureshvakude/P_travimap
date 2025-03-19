@@ -1,15 +1,9 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from import_export.admin import ImportExportModelAdmin
-from import_export import resources
 from .models import User
 
-class UserResource(resources.ModelResource):
-    class Meta:
-        model = User
 
-class CustomUserAdmin(ImportExportModelAdmin, UserAdmin):
-    resource_class = UserResource
+class CustomUserAdmin(UserAdmin):
     model = User
     list_display = ('username', 'email', 'mobile_number', 'gender', 'dob', 'is_active', 'is_staff', 'is_superuser')
     list_filter = ('gender', 'is_active', 'is_staff', 'is_superuser')
