@@ -1,6 +1,7 @@
 from django.db import models
+import os
+from django.dispatch import receiver
 from users.models import User  
-from places.models import Place  # Import Place model
 
 class Trip(models.Model):
     TRIP_TYPES = [
@@ -31,6 +32,26 @@ class TripImage(models.Model):
 
     def __str__(self):
         return f"Image for {self.trip.name}"
+
+    def delete(self, *args, **kwargs):
+        """Delete image file from storage when the instance is deleted."""
+        if self.image and os.path.isfile(self.image.path):
+            os.remove(self.image.path)  # Remove file from file system
+        super().delete(*args, **kwargs)
+
+# Signal to delete image files when a TripImage is deleted
+@receiver(models.signals.post_delete, sender=TripImage)
+def auto_delete_trip_image_on_delete(sender, instance, **kwargs):
+    """Deletes image file from storage when corresponding TripImage object is deleted."""
+    if instance.image and os.path.isfile(instance.image.path):
+        os.remove(instance.image.path)
+
+# Signal to delete all related images when a Trip is deleted
+@receiver(models.signals.pre_delete, sender=Trip)
+def delete_related_trip_images(sender, instance, **kwargs):
+    """Deletes all related TripImage objects and their files when a Trip is deleted."""
+    for image in instance.images.all():
+        image.delete()  # This will call the overridden delete method and remove the image file
 
 class Itinerary(models.Model):
     trip = models.ForeignKey(Trip, related_name="itinerary", on_delete=models.CASCADE)
