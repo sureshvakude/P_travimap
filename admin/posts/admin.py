@@ -1,6 +1,21 @@
 from django.contrib import admin
 from django.utils.html import format_html
+from import_export.admin import ImportExportModelAdmin
+from import_export import resources
 from .models import Post, PostImage, PostComment
+
+# Define resource classes for import/export
+class PostResource(resources.ModelResource):
+    class Meta:
+        model = Post
+
+class PostImageResource(resources.ModelResource):
+    class Meta:
+        model = PostImage
+
+class PostCommentResource(resources.ModelResource):
+    class Meta:
+        model = PostComment
 
 # Inline model for uploading multiple images
 class PostImageInline(admin.TabularInline):
@@ -18,13 +33,21 @@ class PostCommentInline(admin.TabularInline):
     model = PostComment
     extra = 1  # Allows adding one comment at a time
 
-# Admin model
-class PostAdmin(admin.ModelAdmin):
+# Admin model with import/export
+@admin.register(Post)
+class PostAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     list_display = ('name', 'user', 'likes', 'created_at')
     search_fields = ('name', 'user__username', 'caption')
     list_filter = ('created_at',)
-    inlines = [PostImageInline, PostCommentInline]  # Allow image & comment uploads in admin
+    inlines = [PostImageInline, PostCommentInline]
+    resource_class = PostResource
 
-admin.site.register(Post, PostAdmin)
-admin.site.register(PostImage)
-admin.site.register(PostComment)
+@admin.register(PostImage)
+class PostImageAdmin(ImportExportModelAdmin, admin.ModelAdmin):
+    list_display = ('post', 'image')
+    resource_class = PostImageResource
+
+@admin.register(PostComment)
+class PostCommentAdmin(ImportExportModelAdmin, admin.ModelAdmin):
+    list_display = ('post', 'user', 'message', 'created_at')
+    resource_class = PostCommentResource

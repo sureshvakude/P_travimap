@@ -1,4 +1,7 @@
-django
+django<5
 mysqlclient
 pillow
 python-dotenv
+djangorestframework
+djangorestframework-simplejwt
+django-import-export
