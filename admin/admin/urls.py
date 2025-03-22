@@ -11,6 +11,9 @@ admin.site.index_title = "Welcome to Travimap Admin Dashboard"
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/user/', include('users.urls')),
+    path('api/trip/', include('trips.urls')),
+    path('api/post/', include('posts.urls')),
+    path('api/place/', include('places.urls')),
 ]
 
 # Serve media files in development
