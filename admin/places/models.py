@@ -1,6 +1,13 @@
 from django.db import models
 import os
 from django.dispatch import receiver
+from django.core.exceptions import ValidationError
+
+def validate_image_size(image):
+    """Ensure image size does not exceed 100 KB."""
+    max_size = 100 * 1024  # 500 KB
+    if image.size > max_size:
+        raise ValidationError("Image size should not exceed 100 KB.")
 
 class Place(models.Model):
     name = models.CharField(max_length=255, unique=True)
@@ -22,7 +29,7 @@ class Place(models.Model):
 
 class PlaceImage(models.Model):
     place = models.ForeignKey(Place, related_name="images", on_delete=models.CASCADE)
-    image = models.ImageField(upload_to="uploads/places/")
+    image = models.ImageField(upload_to="uploads/places/", validators=[validate_image_size])
 
     def __str__(self):
         return f"Image for {self.place.name}"

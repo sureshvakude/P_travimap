@@ -1,5 +1,13 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin, Group, Permission
+from django.core.exceptions import ValidationError
+from django.utils.translation import gettext_lazy as _
+import os
+
+def validate_image_size(image):
+    max_size = 100 * 1024  # 100 KB
+    if image.size > max_size:
+        raise ValidationError(_("Image size should not exceed 100 KB."))
 
 class UserManager(BaseUserManager):
     def create_user(self, email, username, password=None, **extra_fields):
@@ -31,8 +39,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     gender = models.CharField(max_length=10, choices=GENDER_CHOICES, blank=True, null=True)
     dob = models.DateField(blank=True, null=True)
     role = models.CharField(max_length=50, blank=True, null=True)
-    profile_picture = models.ImageField(upload_to='uploads/profile_pictures/', blank=True, null=True)
-    profile_background = models.ImageField(upload_to='uploads/profile_backgrounds/', blank=True, null=True)
+    profile_picture = models.ImageField(upload_to='uploads/profile_pictures/', blank=True, null=True, validators=[validate_image_size])
+    profile_background = models.ImageField(upload_to='uploads/profile_backgrounds/', blank=True, null=True, validators=[validate_image_size])
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
@@ -51,3 +59,30 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.username
+    
+    def delete_old_file(self, field_name):
+        """Deletes old file when updating a new one"""
+        try:
+            old_file = getattr(self, field_name)
+            if old_file:
+                if os.path.isfile(old_file.path):
+                    os.remove(old_file.path)
+        except Exception as e:
+            print(f"Error deleting old file: {e}")
+
+    def save(self, *args, **kwargs):
+        # Check if updating profile_picture
+        if self.pk:
+            old_user = User.objects.get(pk=self.pk)
+            if old_user.profile_picture != self.profile_picture:
+                self.delete_old_file('profile_picture')
+            if old_user.profile_background != self.profile_background:
+                self.delete_old_file('profile_background')
+
+        super().save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        # Delete images from storage before deleting user
+        self.delete_old_file('profile_picture')
+        self.delete_old_file('profile_background')
+        super().delete(*args, **kwargs)
