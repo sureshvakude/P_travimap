@@ -7,4 +7,4 @@ djangorestframework-simplejwt
 django-import-export
 django-cors-headers
 whitenoise
-python-dotenv
+dotenv
