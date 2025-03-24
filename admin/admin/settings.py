@@ -20,10 +20,10 @@ if DEBUG:
 
 CORS_ALLOW_ALL_ORIGINS = True
 
-ALLOWED_HOSTS = ["127.0.0.1", "localhost",]
+ALLOWED_HOSTS = ["127.0.0.1", "localhost","travimap.in","travimap.com","admin.travimap.in","admin.travimap.com","46.202.164.226"]
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:4001",
+    "http://localhost:4001","travimap.in","travimap.com","admin.travimap.in","admin.travimap.com","46.202.164.226"
 ]
 
 # Application definition

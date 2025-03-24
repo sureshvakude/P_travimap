@@ -2,6 +2,13 @@ from django.db import models
 import os
 from django.dispatch import receiver
 from users.models import User  # Import User model
+from django.core.exceptions import ValidationError
+
+# Function to validate image size
+def validate_image_size(image):
+    max_size = 100 * 1024  # 100KB
+    if image.size > max_size:
+        raise ValidationError("Image file size must not exceed 100KB.")
 
 class Post(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="posts")  # Link to User
@@ -18,7 +25,7 @@ class Post(models.Model):
 
 class PostImage(models.Model):
     post = models.ForeignKey(Post, related_name="images", on_delete=models.CASCADE)
-    image = models.ImageField(upload_to="uploads/posts/")
+    image = models.ImageField(upload_to="uploads/posts/", validators=[validate_image_size])
 
     def __str__(self):
         return f"Image for {self.post.name}"

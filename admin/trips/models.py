@@ -1,7 +1,14 @@
 from django.db import models
 import os
+from django.core.exceptions import ValidationError
 from django.dispatch import receiver
 from users.models import User  
+
+# Function to validate image size (Max: 100KB)
+def validate_image_size(image):
+    max_size = 100 * 1024  # 100KB
+    if image.size > max_size:
+        raise ValidationError("Image file size must not exceed 100KB.")
 
 class Trip(models.Model):
     TRIP_TYPES = [
@@ -28,7 +35,7 @@ class Trip(models.Model):
 
 class TripImage(models.Model):
     trip = models.ForeignKey(Trip, related_name="images", on_delete=models.CASCADE)
-    image = models.ImageField(upload_to="uploads/trips/")
+    image = models.ImageField(upload_to="uploads/trips/", validators=[validate_image_size])
 
     def __str__(self):
         return f"Image for {self.trip.name}"
