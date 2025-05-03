@@ -3,7 +3,7 @@ const apiUrl = import.meta.env.VITE_API_URL;
 
 export const getAllPosts = async () => {
     try {
-        const response = await axios.get(`${apiUrl}/posts`);
+        const response = await axios.get(`${apiUrl}/api/post/posts`);
         return response.data;
     } catch (error) {
         console.error("Failed to get Places");

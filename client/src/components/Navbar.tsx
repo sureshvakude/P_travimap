@@ -30,15 +30,15 @@ const Navbar = () => {
               <Compass className="h-5 w-5" />
               <span>Explore</span>
             </Link>
-            <Link to="/trips" className="text-gray-600 hover:text-blue-600 flex items-center space-x-1">
+            {/* <Link to="/trips" className="text-gray-600 hover:text-blue-600 flex items-center space-x-1">
               <Map className="h-5 w-5" />
               <span>Trips</span>
             </Link>
             <Link to="/gallery" className="text-gray-600 hover:text-blue-600 flex items-center space-x-1">
               <Image className="h-5 w-5" />
               <span>Gallery</span>
-            </Link>
-            {
+            </Link> */}
+            {/* {
               isLogin ? (
                 <>
                   <Link to="/profile" className="text-gray-600 hover:text-blue-600 flex items-center space-x-1">
@@ -52,7 +52,7 @@ const Navbar = () => {
                   <span>Login</span>
                 </Link>
               )
-            }
+            } */}
           </div>
 
           {/* Mobile Menu Button */}

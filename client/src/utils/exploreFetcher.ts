@@ -3,7 +3,7 @@ const apiUrl = import.meta.env.VITE_API_URL;
 
 export const getAllPlaces = async () => {
     try {
-        const response = await axios.get(`${apiUrl}/places`);
+        const response = await axios.get(`${apiUrl}/api/place/places/all/`);
         return response.data;
     } catch (error) {
         console.error("Failed to get Places");
@@ -13,7 +13,7 @@ export const getAllPlaces = async () => {
 
 export const getPlaceById = async (id: string) => {
     try {
-        const response = await axios.get(`${apiUrl}/places/${id}`);
+        const response = await axios.get(`${apiUrl}/api/place/places/${id}`);
         return response;
     } catch (error) {
         console.error("Failed to get place");

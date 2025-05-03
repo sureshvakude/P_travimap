@@ -43,13 +43,12 @@ const Explore = () => {
             onChange={(e) => setCategoryFilter(e.target.value)}
           >
             <option value="all">All Categories</option>
-            {destinations.map((destination: { category: any }, index: any) => (
-              <option value={destination.category} key={index}>{destination.category}</option>
+            {[...new Set(destinations.map((d: any) => d.category))].map((category, index) => (
+              <option value={category as string} key={index}>{category as string}</option>
             ))}
           </select>
         </div>
       </div>
-
       {/* Destination is empty */}
       {filteredDestinations.length === 0 && (
         <div className="flex flex-col items-center justify-center text-center py-10">
@@ -65,10 +64,10 @@ const Explore = () => {
       {/* Destinations Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {filteredDestinations.map((destination: any, index: any) => (
-          <Link key={index} className="bg-white rounded-lg shadow-md overflow-hidden cursor-pointer" to={`/place/explore/` + destination._id}>
+          <Link key={index} className="bg-white rounded-lg shadow-md overflow-hidden cursor-pointer" to={`/place/explore/` + destination.id}>
             <div className="relative h-48">
               <img
-                src={destination.img}
+                src={destination?.images[0]?.image}
                 alt={destination.name}
                 className="w-full h-full object-cover"
               />

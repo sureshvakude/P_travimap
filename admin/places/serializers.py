@@ -9,6 +9,7 @@ class PlaceImageSerializer(serializers.ModelSerializer):
 
 class PlaceSerializer(serializers.ModelSerializer):
     """Serializer for Place without images"""
+    images = PlaceImageSerializer(many=True, read_only=True)
     class Meta:
         model = Place
         fields = '__all__'
