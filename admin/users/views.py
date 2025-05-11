@@ -22,13 +22,6 @@ class LoginView(APIView):
             return Response(UserSerializer(user).data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class LogoutView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
-    
-    def post(self, request):
-        logout(request)
-        return Response({"message": "Successfully logged out"}, status=status.HTTP_200_OK)
-
 class GetUserView(APIView):
     def get(self, request, pk):
         user = User.objects.get(pk=pk)
@@ -55,3 +48,4 @@ class DeleteUserView(APIView):
         user = User.objects.get(pk=pk)
         user.delete()
         return Response({"message": "User deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
+    

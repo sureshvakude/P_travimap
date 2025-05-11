@@ -1,0 +1,9 @@
+apps:
+    users api  - 
+    posts api  - 
+    places api - 
+    trips api  - 
+
+credential:
+    username: sureshvakude8906@gmail.com
+    password: suresh

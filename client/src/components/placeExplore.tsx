@@ -13,7 +13,7 @@ const placeExploreNew = () => {
         const fetchPlace = async () => {
             if (!id) return;
             const postData = await getPlaceById(id);
-            setPlace(postData.data);
+            setPlace(postData);
         };
         fetchPlace();
     }, [id]);

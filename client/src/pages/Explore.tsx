@@ -1,23 +1,59 @@
 import { Search, MapPin } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import { getAllPlaces } from '../utils/exploreFetcher';
 import { Link } from 'react-router-dom';
 
 const Explore = () => {
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
-  const [destinations, setDestinations] = useState<any>([]);
+  const [destinations, setDestinations] = useState<any[]>([]);
+  const [offset, setOffset] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const observer = useRef<IntersectionObserver | null>(null);
+  const loaderRef = useRef<HTMLDivElement | null>(null);
+  const limit = 20;
+
+  const loadPlaces = useCallback(async () => {
+    if (loading || !hasMore) return;
+    setLoading(true);
+
+    try {
+      const data = await getAllPlaces(limit, offset);
+      setDestinations((prev) => [...prev, ...data.results]);
+      setOffset((prev) => prev + limit);
+      setHasMore(data.next !== null);
+    } catch (error) {
+      console.error("Error loading places", error);
+    } finally {
+      setLoading(false);
+    }
+  }, [offset, loading, hasMore]);
 
   useEffect(() => {
-    const fetchAllPlaces = async () => {
-      const getDestinations = await getAllPlaces();
-      setDestinations(getDestinations);
-    }
-
-    fetchAllPlaces();
+    loadPlaces();
   }, []);
 
-  const filteredDestinations = destinations.filter((destination: { category: string; name: string; }) =>
+  useEffect(() => {
+    if (!loaderRef.current) return;
+
+    observer.current = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasMore) {
+          loadPlaces();
+        }
+      },
+      { threshold: 1.0 }
+    );
+
+    observer.current.observe(loaderRef.current);
+
+    return () => {
+      if (loaderRef.current) observer.current?.unobserve(loaderRef.current);
+    };
+  }, [loadPlaces, hasMore]);
+
+  const filteredDestinations = destinations.filter((destination: { category: string; name: string }) =>
     (categoryFilter === 'all' || destination.category === categoryFilter) &&
     destination.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -43,17 +79,18 @@ const Explore = () => {
             onChange={(e) => setCategoryFilter(e.target.value)}
           >
             <option value="all">All Categories</option>
-            {[...new Set(destinations.map((d: any) => d.category))].map((category, index) => (
-              <option value={category as string} key={index}>{category as string}</option>
+            {[...new Set(destinations.map((d) => d.category))].map((category, index) => (
+              <option value={category} key={index}>{category}</option>
             ))}
           </select>
         </div>
       </div>
-      {/* Destination is empty */}
+
+      {/* No Results */}
       {filteredDestinations.length === 0 && (
         <div className="flex flex-col items-center justify-center text-center py-10">
           <img
-            src="https://icons.veryicon.com/png/o/miscellaneous/template-3/no-order.png" // Add an appropriate image in the public folder
+            src="https://icons.veryicon.com/png/o/miscellaneous/template-3/no-order.png"
             alt="No Places Available"
             className="w-60 h-60 object-contain"
           />
@@ -61,10 +98,11 @@ const Explore = () => {
           <p className="text-gray-500 text-sm mt-2">Try searching with a different filter or check back later.</p>
         </div>
       )}
-      {/* Destinations Grid */}
+
+      {/* Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {filteredDestinations.map((destination: any, index: any) => (
-          <Link key={index} className="bg-white rounded-lg shadow-md overflow-hidden cursor-pointer" to={`/place/explore/` + destination.id}>
+        {filteredDestinations.map((destination, index) => (
+          <Link key={index} className="bg-white rounded-lg shadow-md overflow-hidden cursor-pointer" to={`/place/explore/${destination.id}`}>
             <div className="relative h-48">
               <img
                 src={destination?.images[0]?.image}
@@ -92,6 +130,13 @@ const Explore = () => {
           </Link>
         ))}
       </div>
+
+      {/* Loader */}
+      {hasMore && (
+        <div ref={loaderRef} className="flex justify-center py-10">
+          <span className="text-gray-500">Loading more...</span>
+        </div>
+      )}
     </div>
   );
 };

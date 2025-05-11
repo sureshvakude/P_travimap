@@ -11,7 +11,7 @@ class UserResource(resources.ModelResource):
 class CustomUserAdmin(ImportExportModelAdmin,  admin.ModelAdmin):
     resource_class = UserResource
     model = User
-    list_display = ('username', 'email', 'mobile_number', 'gender', 'dob', 'is_active', 'is_staff', 'is_superuser')
+    list_display = ('username', 'email', 'mobile_number', 'dob', 'is_active')
     list_filter = ('gender', 'is_active', 'is_staff', 'is_superuser')
     search_fields = ('username', 'email', 'mobile_number')
 

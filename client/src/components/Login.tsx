@@ -20,7 +20,7 @@ const Login = () => {
 
     try {
       const userData = await loginUser(email, password);
-      login(userData.user);
+      login(userData);
       setLoading(false);
       navigate("/");
     } catch (err) {

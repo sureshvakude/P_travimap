@@ -3,6 +3,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path, include
 from django.contrib import admin
+from django.views.generic import RedirectView
 
 admin.site.site_header = "Travimap Admin Panel"
 admin.site.site_title = "Travimap Admin"
@@ -10,6 +11,7 @@ admin.site.index_title = "Welcome to Travimap Admin Dashboard"
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', RedirectView.as_view(url='/admin/', permanent=False)),
     path('api/user/', include('users.urls')),
     path('api/trip/', include('trips.urls')),
     path('api/post/', include('posts.urls')),

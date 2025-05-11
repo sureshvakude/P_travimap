@@ -13,7 +13,7 @@ import Login from './components/Login';
 import Profile from './pages/Profile';
 import NotFound from './components/NotFound';
 import useAuth from './contexts/userAuth';
-import ProfilePostExplore from './components/PostExplore';
+import ProfilePostExplore from './components/postExplore';
 import PlaceExploreNew from './components/placeExplore';
 
 function App() {

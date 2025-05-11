@@ -1,8 +1,6 @@
 from rest_framework import generics, permissions
-from rest_framework.response import Response
-from rest_framework.views import APIView
-from .models import Post, PostImage, PostComment
-from .serializers import PostSerializer, PostImageSerializer, PostCommentSerializer
+from .models import Post
+from .serializers import PostSerializer
 
 # Get all posts
 class GetAllPostsView(generics.ListAPIView):
@@ -20,7 +18,7 @@ class GetSinglePostView(generics.RetrieveAPIView):
 class CreatePostView(generics.CreateAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)  # Assign the logged-in user to the post
@@ -29,7 +27,7 @@ class CreatePostView(generics.CreateAPIView):
 class UpdatePostView(generics.UpdateAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
 
     def perform_update(self, serializer):
         if serializer.instance.user != self.request.user:
@@ -40,7 +38,7 @@ class UpdatePostView(generics.UpdateAPIView):
 class DeletePostView(generics.DestroyAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
 
     def perform_destroy(self, instance):
         if instance.user != self.request.user:
