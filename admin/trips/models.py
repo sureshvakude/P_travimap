@@ -35,7 +35,7 @@ class Trip(models.Model):
 
 class TripImage(models.Model):
     trip = models.ForeignKey(Trip, related_name="images", on_delete=models.CASCADE)
-    image = models.ImageField(upload_to="uploads/trips/", validators=[validate_image_size])
+    image = models.ImageField(upload_to="trips/", validators=[validate_image_size])
 
     def __str__(self):
         return f"Image for {self.trip.name}"

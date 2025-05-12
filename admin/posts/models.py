@@ -25,7 +25,7 @@ class Post(models.Model):
 
 class PostImage(models.Model):
     post = models.ForeignKey(Post, related_name="images", on_delete=models.CASCADE)
-    image = models.ImageField(upload_to="uploads/posts/", validators=[validate_image_size])
+    image = models.ImageField(upload_to="posts/", validators=[validate_image_size])
 
     def __str__(self):
         return f"Image for {self.post.name}"

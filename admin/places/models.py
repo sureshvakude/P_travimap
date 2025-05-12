@@ -29,7 +29,7 @@ class Place(models.Model):
 
 class PlaceImage(models.Model):
     place = models.ForeignKey(Place, related_name="images", on_delete=models.CASCADE)
-    image = models.ImageField(upload_to="uploads/places/", validators=[validate_image_size])
+    image = models.ImageField(upload_to="places/", validators=[validate_image_size])
 
     def __str__(self):
         return f"Image for {self.place.name}"

@@ -1,14 +1,16 @@
 from django.urls import path
 from .views import (
-    ExportTripCSV,
-    GetAllTripsView, GetSingleTripView, UpdateTripView, DeleteTripView, GetTripsByTypeView
+    TripListView, TripCreateView, TripDetailView, TripUpdateView, TripDeleteView,
+    PublicTripListView, UserTripsView, JoinedTripsView
 )
 
 urlpatterns = [
-    path('export-trips/', ExportTripCSV.as_view(), name='export_trips'),
-    path('trips/all/', GetAllTripsView.as_view(), name='get_all_trips'),
-    path('trips/<int:pk>/', GetSingleTripView.as_view(), name='get_single_trip'),
-    path('trips/update/<int:pk>/', UpdateTripView.as_view(), name='update_trip'),
-    path('trips/delete/<int:pk>/', DeleteTripView.as_view(), name='delete_trip'),
-    path('trips/type/<str:trip_type>/', GetTripsByTypeView.as_view(), name='get_trips_by_type'),
+    path('', TripListView.as_view(), name='trip-list'),
+    path('create/', TripCreateView.as_view(), name='trip-create'),
+    path('<int:pk>/', TripDetailView.as_view(), name='trip-detail'),
+    path('<int:pk>/update/', TripUpdateView.as_view(), name='trip-update'),
+    path('<int:pk>/delete/', TripDeleteView.as_view(), name='trip-delete'),
+    path('public/', PublicTripListView.as_view(), name='public-trips'),
+    path('user/<int:user_id>/', UserTripsView.as_view(), name='user-trips'),
+    path('joined/<int:user_id>/', JoinedTripsView.as_view(), name='joined-trips'),
 ]

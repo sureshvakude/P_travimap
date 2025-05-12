@@ -1,45 +1,48 @@
-from rest_framework import viewsets, generics
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
-from django.http import HttpResponse
-import csv
-from .models import Trip, TripImage, Itinerary
-from .serializers import TripSerializer, TripImageSerializer, ItinerarySerializer
+from rest_framework import generics, filters
+from django_filters.rest_framework import DjangoFilterBackend
+from .models import Trip
+from .serializers import TripSerializer, TripCreateSerializer
 
-class TripViewSet(viewsets.ModelViewSet):
-    queryset = Trip.objects.all()
+class TripListView(generics.ListAPIView):
     serializer_class = TripSerializer
-
-class GetAllTripsView(generics.ListAPIView):
     queryset = Trip.objects.all()
-    serializer_class = TripSerializer
+    filter_backends = [filters.SearchFilter, DjangoFilterBackend]
+    search_fields = ['name', 'destination', 'start_date', 'explore_places']
 
-class GetSingleTripView(generics.RetrieveAPIView):
+class TripCreateView(generics.CreateAPIView):
+    serializer_class = TripCreateSerializer
     queryset = Trip.objects.all()
-    serializer_class = TripSerializer
 
-class UpdateTripView(generics.UpdateAPIView):
+class TripDetailView(generics.RetrieveAPIView):
+    serializer_class = TripSerializer
     queryset = Trip.objects.all()
-    serializer_class = TripSerializer
 
-class DeleteTripView(generics.DestroyAPIView):
+class TripUpdateView(generics.UpdateAPIView):
+    serializer_class = TripCreateSerializer
     queryset = Trip.objects.all()
-    serializer_class = TripSerializer
 
-class GetTripsByTypeView(generics.ListAPIView):
+class TripDeleteView(generics.DestroyAPIView):
+    serializer_class = TripSerializer
+    queryset = Trip.objects.all()
+
+class PublicTripListView(generics.ListAPIView):
+    serializer_class = TripSerializer
+    filter_backends = [filters.SearchFilter, DjangoFilterBackend]
+    search_fields = ['name', 'destination', 'start_date', 'explore_places']
+
+    def get_queryset(self):
+        return Trip.objects.filter(trip_type='public')
+
+class UserTripsView(generics.ListAPIView):
     serializer_class = TripSerializer
 
     def get_queryset(self):
-        trip_type = self.kwargs['trip_type']
-        return Trip.objects.filter(trip_type=trip_type)
+        user_id = self.kwargs.get('user_id')
+        return Trip.objects.filter(user_id=user_id)
 
-class ExportTripCSV(APIView):
-    def get(self, request):
-        response = HttpResponse(content_type='text/csv')
-        response['Content-Disposition'] = 'attachment; filename="trips.csv"'
-        writer = csv.writer(response)
-        writer.writerow(['ID', 'User', 'Name', 'Destination', 'Start Date', 'End Date', 'Budget', 'Trip Type'])
-        for trip in Trip.objects.all():
-            writer.writerow([trip.id, trip.user.username, trip.name, trip.destination, trip.start_date, trip.end_date, trip.budget, trip.trip_type])
-        return response
+class JoinedTripsView(generics.ListAPIView):
+    serializer_class = TripSerializer
+
+    def get_queryset(self):
+        user_id = self.kwargs.get('user_id')
+        return Trip.objects.filter(trip_members__id=user_id)

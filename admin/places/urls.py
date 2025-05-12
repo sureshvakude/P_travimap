@@ -1,9 +1,7 @@
 from django.urls import path
-from .views import (
-    GetAllPlacesView, GetSinglePlaceView,
-)
+from .views import PlaceListView, PlaceDetailView
 
 urlpatterns = [
-    path('places/all/', GetAllPlacesView.as_view(), name='get_all_places'),
-    path('places/<int:pk>/', GetSinglePlaceView.as_view(), name='get_single_place'),
+    path('places/', PlaceListView.as_view(), name='place-list'),
+    path('places/<int:pk>/', PlaceDetailView.as_view(), name='place-detail'),
 ]

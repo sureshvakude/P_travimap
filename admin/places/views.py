@@ -1,46 +1,42 @@
-from rest_framework import generics
-from .models import Place
-from .serializers import PlaceSerializer, PlaceDetailSerializer
-from rest_framework.pagination import LimitOffsetPagination
+from rest_framework import generics, filters
 from django.db.models import Q
+from .models import Place
+from .serializers import PlaceSerializer
+from rest_framework.pagination import PageNumberPagination
 
-class PlacePagination(LimitOffsetPagination):
-    default_limit = 20
-    max_limit = 100
+class CustomPagination(PageNumberPagination):
+    page_size = 20
+    page_size_query_param = 'page_size'
+    max_page_size = 50
 
-class GetAllPlacesView(generics.ListAPIView):
-    """
-    Retrieve places filtered by OR conditions: name, category, or state.
-    Example: /places/all/?name=beach&state=Texas&category=Park
-    Returns any place that matches ANY of these.
-    """
+class PlaceListView(generics.ListAPIView):
     serializer_class = PlaceSerializer
-    pagination_class = PlacePagination
+    pagination_class = CustomPagination
 
     def get_queryset(self):
-        queryset = Place.objects.all().order_by('-id')
+        queryset = Place.objects.all()
 
-        # Get optional query parameters
+        # Get query params
+        category = self.request.query_params.get('category')
         name = self.request.query_params.get('name')
         state = self.request.query_params.get('state')
-        category = self.request.query_params.get('category')
+        description = self.request.query_params.get('description')
 
-        # Build Q object for OR filtering
-        filters = Q()
-        if name:
-            filters |= Q(name__icontains=name)
-        if state:
-            filters |= Q(state__iexact=state)
-        if category:
-            filters |= Q(category__iexact=category)
-
-        # Apply filters if any
-        if filters:
-            queryset = queryset.filter(filters)
+        # Filter with OR condition
+        if category or name or state or description:
+            query = Q()
+            if category:
+                query |= Q(category__icontains=category)
+            if name:
+                query |= Q(name__icontains=name)
+            if state:
+                query |= Q(state__icontains=state)
+            if description:
+                query |= Q(description__icontains=description)
+            queryset = queryset.filter(query)
 
         return queryset
 
-class GetSinglePlaceView(generics.RetrieveAPIView):
-    """Retrieve a single place by ID"""
+class PlaceDetailView(generics.RetrieveAPIView):
     queryset = Place.objects.all()
-    serializer_class = PlaceDetailSerializer
+    serializer_class = PlaceSerializer
