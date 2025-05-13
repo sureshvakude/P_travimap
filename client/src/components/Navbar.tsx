@@ -1,86 +1,141 @@
-"use client";
-
-import { useState, useEffect } from 'react';
+'use client';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { useState } from 'react';
 
-const Navbar = () => {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // Change this based on your auth state
-  const pathname = usePathname();
+interface NavbarProps {
+  isLoggedIn: boolean;
+  scrolled: boolean;
+}
 
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 10) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+const Navbar = ({ isLoggedIn, scrolled }: NavbarProps) => {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <nav className={`fixed w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-white shadow-md py-2' : 'bg-transparent py-4'}`}>
-      <div className="container mx-auto px-4 md:px-6 flex justify-between items-center">
+    <header
+      className={`fixed w-full z-50 transition-all duration-300 ${
+        scrolled ? 'bg-white/90 backdrop-blur-md shadow-sm' : 'bg-transparent'
+      }`}
+    >
+      <div className="container mx-auto px-4 py-3 flex justify-between items-center">
         {/* Logo */}
         <div className="flex items-center">
-          <Link href="/" className="text-2xl font-bold text-white">
-            <span className={isScrolled ? 'text-gray-800' : 'text-white'}>TravelEase</span>
+          <Link href="/" className="text-2xl font-bold text-indigo-600">
+            TravelMap
           </Link>
         </div>
 
-        {/* Navigation Links - Center */}
-        <div className="hidden md:flex space-x-8">
-          <Link 
-            href="/explore" 
-            className={`transition-colors duration-200 ${isScrolled ? 'text-gray-800 hover:text-blue-600' : 'text-white hover:text-blue-200'} ${pathname === '/explore' ? (isScrolled ? 'text-blue-600' : 'text-blue-200') : ''}`}
-          >
+        {/* Desktop Navigation */}
+        <nav className="hidden md:flex items-center space-x-8">
+          <Link href="/explore" className="text-gray-700 hover:text-indigo-600 transition">
             Explore
           </Link>
-          <Link 
-            href="/trips" 
-            className={`transition-colors duration-200 ${isScrolled ? 'text-gray-800 hover:text-blue-600' : 'text-white hover:text-blue-200'} ${pathname === '/trips' ? (isScrolled ? 'text-blue-600' : 'text-blue-200') : ''}`}
-          >
+          <Link href="/trips" className="text-gray-700 hover:text-indigo-600 transition">
             Trips
           </Link>
-          <Link 
-            href="/gallery" 
-            className={`transition-colors duration-200 ${isScrolled ? 'text-gray-800 hover:text-blue-600' : 'text-white hover:text-blue-200'} ${pathname === '/gallery' ? (isScrolled ? 'text-blue-600' : 'text-blue-200') : ''}`}
-          >
+          <Link href="/gallery" className="text-gray-700 hover:text-indigo-600 transition">
             Gallery
           </Link>
-        </div>
+        </nav>
 
-        {/* Auth Buttons - Right */}
-        <div className="flex items-center space-x-4">
-          {isLoggedIn ? (
-            <div className="flex items-center space-x-2">
-              <button className={`rounded-full w-10 h-10 flex items-center justify-center ${isScrolled ? 'bg-gray-200' : 'bg-white bg-opacity-20'}`}>
-                <span className="text-lg">👤</span>
-              </button>
-            </div>
-          ) : (
+        {/* Auth Buttons / Profile */}
+        <div className="hidden md:flex items-center space-x-4">
+          {!isLoggedIn ? (
             <>
-              <Link 
-                href="/login" 
-                className={`px-4 py-2 rounded-md transition-colors duration-200 ${isScrolled ? 'text-gray-800 hover:text-blue-600' : 'text-white hover:text-blue-200'}`}
-              >
+              <Link href="/signin" className="px-4 py-2 text-gray-700 hover:text-indigo-600 transition">
                 Sign In
               </Link>
-              <Link 
-                href="/signup" 
-                className={`px-4 py-2 rounded-md ${isScrolled ? 'bg-blue-600 text-white hover:bg-blue-700' : 'bg-white text-blue-600 hover:bg-gray-100'}`}
+              <Link
+                href="/signup"
+                className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition"
               >
                 Sign Up
               </Link>
             </>
+          ) : (
+            <div className="relative group">
+              <button className="flex items-center space-x-2">
+                <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600">
+                  <span className="font-medium">U</span>
+                </div>
+              </button>
+              <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 hidden group-hover:block">
+                <Link href="/profile" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">
+                  Profile
+                </Link>
+                <Link href="/settings" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">
+                  Settings
+                </Link>
+                <button className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100">
+                  Logout
+                </button>
+              </div>
+            </div>
           )}
         </div>
+
+        {/* Mobile Menu Button */}
+        <button
+          className="md:hidden text-gray-700 focus:outline-none"
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+        >
+          <svg
+            className="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d={mobileMenuOpen ? 'M6 18L18 6M6 6l12 12' : 'M4 6h16M4 12h16M4 18h16'}
+            />
+          </svg>
+        </button>
       </div>
-    </nav>
+
+      {/* Mobile Menu */}
+      {mobileMenuOpen && (
+        <div className="md:hidden bg-white shadow-lg py-2 px-4">
+          <nav className="flex flex-col space-y-3">
+            <Link href="/explore" className="text-gray-700 hover:text-indigo-600 transition py-2">
+              Explore
+            </Link>
+            <Link href="/trips" className="text-gray-700 hover:text-indigo-600 transition py-2">
+              Trips
+            </Link>
+            <Link href="/gallery" className="text-gray-700 hover:text-indigo-600 transition py-2">
+              Gallery
+            </Link>
+          </nav>
+          <div className="mt-4 pt-4 border-t border-gray-200">
+            {!isLoggedIn ? (
+              <div className="flex flex-col space-y-3">
+                <Link href="/signin" className="text-gray-700 hover:text-indigo-600 transition py-2">
+                  Sign In
+                </Link>
+                <Link
+                  href="/signup"
+                  className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition text-center"
+                >
+                  Sign Up
+                </Link>
+              </div>
+            ) : (
+              <div className="flex flex-col space-y-3">
+                <Link href="/profile" className="text-gray-700 hover:text-indigo-600 transition py-2">
+                  Profile
+                </Link>
+                <button className="text-left text-gray-700 hover:text-indigo-600 transition py-2">
+                  Logout
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+    </header>
   );
 };
 
