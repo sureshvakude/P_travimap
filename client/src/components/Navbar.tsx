@@ -1,20 +1,28 @@
 'use client';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useSession, signOut } from 'next-auth/react';
 
-interface NavbarProps {
-  isLoggedIn: boolean;
-  scrolled: boolean;
-}
-
-const Navbar = ({ isLoggedIn, scrolled }: NavbarProps) => {
+const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const { data: session, status } = useSession();
+  const isLoggedIn = status === "authenticated";
+
+  // Scroll effect
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
     <header
-      className={`fixed w-full z-50 transition-all duration-300 ${
-        scrolled ? 'bg-white/90 backdrop-blur-md shadow-sm' : 'bg-transparent'
-      }`}
+      className={`fixed w-full z-50 transition-all duration-300 ${scrolled ? 'bg-white/90 backdrop-blur-md shadow-sm' : 'bg-transparent'
+        }`}
     >
       <div className="container mx-auto px-4 py-3 flex justify-between items-center">
         {/* Logo */}
@@ -41,7 +49,7 @@ const Navbar = ({ isLoggedIn, scrolled }: NavbarProps) => {
         <div className="hidden md:flex items-center space-x-4">
           {!isLoggedIn ? (
             <>
-              <Link href="/signin" className="px-4 py-2 text-gray-700 hover:text-indigo-600 transition">
+              <Link href="/login" className="px-4 py-2 text-gray-700 hover:text-indigo-600 transition">
                 Sign In
               </Link>
               <Link
@@ -55,7 +63,7 @@ const Navbar = ({ isLoggedIn, scrolled }: NavbarProps) => {
             <div className="relative group">
               <button className="flex items-center space-x-2">
                 <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600">
-                  <span className="font-medium">U</span>
+                  <span className="font-medium">{session.user?.email?.toString().at(0)}</span>
                 </div>
               </button>
               <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 hidden group-hover:block">
@@ -65,7 +73,7 @@ const Navbar = ({ isLoggedIn, scrolled }: NavbarProps) => {
                 <Link href="/settings" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">
                   Settings
                 </Link>
-                <button className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100">
+                <button onClick={() => signOut()} className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100">
                   Logout
                 </button>
               </div>
@@ -127,7 +135,7 @@ const Navbar = ({ isLoggedIn, scrolled }: NavbarProps) => {
                 <Link href="/profile" className="text-gray-700 hover:text-indigo-600 transition py-2">
                   Profile
                 </Link>
-                <button className="text-left text-gray-700 hover:text-indigo-600 transition py-2">
+                <button onClick={() => signOut()} className="text-left text-gray-700 hover:text-indigo-600 transition py-2">
                   Logout
                 </button>
               </div>

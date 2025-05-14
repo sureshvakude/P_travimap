@@ -69,61 +69,63 @@ const ExplorePage = () => {
     }, [handleScroll]);
 
     return (
-        <div className="container mx-auto px-4 py-8">
-            <h1 className="text-3xl font-bold text-gray-800 mb-8">Explore Places</h1>
+        <>
+            <div className="container mx-auto px-4 py-8">
+                <h1 className="text-3xl font-bold text-gray-800 mb-8">Explore Places</h1>
 
-            <SearchBar
-                searchQuery={searchQuery}
-                setSearchQuery={setSearchQuery}
-            />
-
-            {error && (
-                <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-                    {error}
-                </div>
-            )}
-
-            {filteredPlaces.length > 0 ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                    {filteredPlaces.map(place => (
-                        <div
-                            key={`${place.id}-${place.name}`}
-                            onClick={() => setSelectedPlace(place)}
-                            className="cursor-pointer"
-                        >
-                            <PlaceCard place={place} />
-                        </div>
-                    ))}
-                </div>
-            ) : (
-                !loading && (
-                    <div className="text-center py-12">
-                        <p className="text-gray-500 text-lg">
-                            {searchQuery ? 'No matching places found' : 'No places available'}
-                        </p>
-                    </div>
-                )
-            )}
-
-            {loading && (
-                <div className="flex justify-center my-8">
-                    <LoadingSpinner />
-                </div>
-            )}
-
-            {!hasMore && !loading && filteredPlaces.length > 0 && (
-                <div className="text-center py-6 text-gray-500">
-                    You've reached the end of results
-                </div>
-            )}
-
-            {selectedPlace && (
-                <PlaceDetailsModal
-                    place={selectedPlace}
-                    onClose={() => setSelectedPlace(null)}
+                <SearchBar
+                    searchQuery={searchQuery}
+                    setSearchQuery={setSearchQuery}
                 />
-            )}
-        </div>
+
+                {error && (
+                    <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                        {error}
+                    </div>
+                )}
+
+                {filteredPlaces.length > 0 ? (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                        {filteredPlaces.map((place, index) => (
+                            <div
+                                key={`${place.id}-${place.name}-${index}`}
+                                onClick={() => setSelectedPlace(place)}
+                                className="cursor-pointer"
+                            >
+                                <PlaceCard place={place} />
+                            </div>
+                        ))}
+                    </div>
+                ) : (
+                    !loading && (
+                        <div className="text-center py-12">
+                            <p className="text-gray-500 text-lg">
+                                {searchQuery ? 'No matching places found' : 'No places available'}
+                            </p>
+                        </div>
+                    )
+                )}
+
+                {loading && (
+                    <div className="flex justify-center my-8">
+                        <LoadingSpinner />
+                    </div>
+                )}
+
+                {!hasMore && !loading && filteredPlaces.length > 0 && (
+                    <div className="text-center py-6 text-gray-500">
+                        You've reached the end of results
+                    </div>
+                )}
+
+                {selectedPlace && (
+                    <PlaceDetailsModal
+                        place={selectedPlace}
+                        onClose={() => setSelectedPlace(null)}
+                    />
+                )}
+            </div>
+        </>
     );
 };
 
