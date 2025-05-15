@@ -24,15 +24,15 @@ export const getAllPlaces = async (page: number = 1, pageSize: number = 20): Pro
         const axiosError = error as AxiosError;
         if (axiosError.response) {
             // The request was made and the server responded with a status code
-            console.error('API error:', axiosError.response.status, axiosError.response.data);
+            // console.error('API error:', axiosError.response.status, axiosError.response.data);
             throw new Error(`API error: ${axiosError.response.status} - ${axiosError.response.data}`);
         } else if (axiosError.request) {
             // The request was made but no response was received
-            console.error('No response received:', axiosError.request);
-            throw new Error('No response received from the server');
+            // console.error('No response received:', axiosError.request);
+            throw new Error('Sorry for the inconvenience, please try again later.');
         } else {
             // Something happened in setting up the request
-            console.error('Request setup error:', axiosError.message);
+            // console.error('Request setup error:', axiosError.message);
             throw new Error(`Request error: ${axiosError.message}`);
         }
     }

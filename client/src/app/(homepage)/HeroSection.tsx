@@ -7,7 +7,7 @@ const HeroSection = () => {
       {/* Background Image with Overlay */}
       <div className="absolute inset-0 bg-black/30 z-0" />
       <img
-        src="/home.jpg"
+        src="/images/home/home.jpg"
         alt="Travel Hero"
         className="absolute inset-0 w-full h-full object-cover z-0"
       />

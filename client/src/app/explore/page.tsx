@@ -7,6 +7,7 @@ import PlaceCard from './PlaceCard';
 import SearchBar from './SearchBar';
 import LoadingSpinner from './LoadingSpinner';
 import PlaceDetailsModal from './PlaceDeatilModal';
+import Image from 'next/image';
 
 const ExplorePage = () => {
     const [places, setPlaces] = useState<Place[]>([]);
@@ -71,7 +72,7 @@ const ExplorePage = () => {
     return (
         <>
             <div className="container mx-auto px-4 py-8">
-                <h1 className="text-3xl font-bold text-gray-800 mb-8">Explore Places</h1>
+                <h1 className="text-3xl font-bold text-gray-800 mb-8 mt-10">Explore Places</h1>
 
                 <SearchBar
                     searchQuery={searchQuery}
@@ -79,12 +80,17 @@ const ExplorePage = () => {
                 />
 
                 {error && (
-                    <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                    <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 relative">
                         {error}
+                        <button
+                            className="absolute top-0 right-0 px-2 py-1 text-red-700 hover:text-red-900 w-12 h-12 rounded-full"
+                            onClick={() => setError('')}>
+                            &times;
+                        </button>
                     </div>
                 )}
 
-                {filteredPlaces.length > 0 ? (
+                {filteredPlaces && filteredPlaces.length > 0 ? (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                         {filteredPlaces.map((place, index) => (
                             <div
@@ -100,6 +106,12 @@ const ExplorePage = () => {
                     !loading && (
                         <div className="text-center py-12">
                             <p className="text-gray-500 text-lg">
+                                <Image
+                                    src="/images/explore/nodata-explore.png"
+                                    alt="No results"
+                                    width={200}
+                                    height={200}
+                                    className="mx-auto mb-4" />
                                 {searchQuery ? 'No matching places found' : 'No places available'}
                             </p>
                         </div>

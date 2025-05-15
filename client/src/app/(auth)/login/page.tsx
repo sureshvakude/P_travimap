@@ -48,7 +48,6 @@ export default function LoginPage() {
       });
 
       if (result?.error) {
-        console.error('Sign-in error:', result.error);
         setError(getErrorMessage(result.error));
         setIsLoading(false);
       } else {

@@ -1,4 +1,4 @@
-import { userLogin } from "../types/user-login";
+import { Post } from "../types/posts";
 import axios, { AxiosResponse, AxiosError } from "axios";
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
@@ -10,15 +10,10 @@ const apiClient = axios.create({
     timeout: 10000,
 });
 
-export const registerUser = async (email: string, username: string, password: string): Promise<userLogin> => {
+export const getPostById = async (postId: string): Promise<Post> => {
     try {
-        const response: AxiosResponse<userLogin> = await apiClient.post(
-            `/api/user/register/`,
-            {
-                email: email,
-                username: username,
-                password: password,
-            }
+        const response: AxiosResponse<Post> = await apiClient.get(
+            `/api/post/posts/${postId}/`
         );
         return response.data;
     } catch (error) {
@@ -30,7 +25,7 @@ export const registerUser = async (email: string, username: string, password: st
         } else if (axiosError.request) {
             // The request was made but no response was received
             // console.error("No response received:", axiosError.request);
-            throw new Error("No response received from the server");
+            throw new Error("Sorry for the inconveince, server is not responding");
         } else {
             // Something happened in setting up the request
             // console.error("Request setup error:", axiosError.message);
