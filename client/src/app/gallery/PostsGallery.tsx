@@ -4,10 +4,9 @@ import { useState, useEffect } from 'react';
 import { getAllPosts } from '@/utils/posts/api/get-all-posts';
 import { Post } from '@/utils/posts/types/posts';
 import { getPostById } from '@/utils/posts/api/get-post';
-import { HeartIcon, ChatBubbleOvalLeftIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { HeartIcon, ChatBubbleOvalLeftIcon, XMarkIcon, ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import { HeartIcon as HeartIconSolid } from '@heroicons/react/24/solid';
 import Image from 'next/image';
-import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
 
 const PostsGallery = () => {
     const [posts, setPosts] = useState<Post[]>([]);
@@ -16,6 +15,7 @@ const PostsGallery = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [likedPosts, setLikedPosts] = useState<number[]>([]);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchPosts = async () => {
@@ -48,11 +48,13 @@ const PostsGallery = () => {
                     if (a.user !== 2 && b.user === 2) return 1;
 
                     // Finally sort by date
+                    setError(null);
                     return bDate.getTime() - aDate.getTime();
                 });
 
                 setPosts(sortedPosts);
             } catch (err) {
+                setError(err instanceof Error ? err.message : 'Failed to load posts');
                 console.error('Failed to load posts:', err);
             } finally {
                 setLoading(false);
@@ -67,7 +69,9 @@ const PostsGallery = () => {
             setSelectedPost(post);
             setCurrentImageIndex(0);
             setIsModalOpen(true);
+            setError(null);
         } catch {
+            setError('Failed to fetch post details');
             console.error('Error fetching post details');
         }
     };
@@ -80,6 +84,22 @@ const PostsGallery = () => {
         );
     };
 
+    const nextImage = () => {
+        if (selectedPost) {
+            setCurrentImageIndex((prevIndex) => 
+                prevIndex === selectedPost.images.length - 1 ? 0 : prevIndex + 1
+            );
+        }
+    };
+
+    const prevImage = () => {
+        if (selectedPost) {
+            setCurrentImageIndex((prevIndex) => 
+                prevIndex === 0 ? selectedPost.images.length - 1 : prevIndex - 1
+            );
+        }
+    };
+
     if (loading) return (
         <div className="flex justify-center items-center min-h-screen bg-gray-50">
             <div className="animate-pulse flex flex-col items-center">
@@ -88,6 +108,22 @@ const PostsGallery = () => {
             </div>
         </div>
     );
+
+    if (error) return (
+        <div className="flex flex-col justify-center items-center min-h-screen bg-gray-50">
+            <div className="text-center py-12">
+                <p className="text-gray-500 text-lg">
+                    <Image
+                        src="/images/explore/nodata-explore.png"
+                        alt="No results"
+                        width={200}
+                        height={200}
+                        className="mx-auto mb-4" />
+                    {'No Posts available'}
+                </p>
+            </div>
+        </div>
+    )
 
     return (
         <div className="min-h-screen bg-gray-50">
@@ -186,30 +222,54 @@ const PostsGallery = () => {
 
                         {/* Image Carousel - Fixed Aspect Ratio */}
                         <div className="w-full md:w-[65%] h-[60vh] md:h-full bg-black flex items-center justify-center relative">
-                            {selectedPost.images.length > 0 ? (
-                                selectedPost.images.map((image, index) => (
-                                    <div
-                                        key={index}
-                                        className={`absolute inset-0 transition-opacity duration-300 ${currentImageIndex === index ? 'opacity-100' : 'opacity-0'}`}
-                                    >
-                                        <Image
-                                            src={image.image}
-                                            alt={selectedPost.caption}
-                                            fill
-                                            className="object-cover"
-                                            sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
-                                        />
+                            {selectedPost.images.length > 0 && (
+                                <>
+                                    <Image
+                                        src={selectedPost.images[currentImageIndex].image}
+                                        alt={selectedPost.caption}
+                                        fill
+                                        className="object-contain"
+                                        sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
+                                    />
+                                    
+                                    {/* Navigation Arrows */}
+                                    {selectedPost.images.length > 1 && (
+                                        <>
+                                            <button
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    prevImage();
+                                                }}
+                                                className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black/50 text-white p-2 rounded-full hover:bg-black/70 transition"
+                                            >
+                                                <ChevronLeftIcon className="h-6 w-6" />
+                                            </button>
+                                            <button
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    nextImage();
+                                                }}
+                                                className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black/50 text-white p-2 rounded-full hover:bg-black/70 transition"
+                                            >
+                                                <ChevronRightIcon className="h-6 w-6" />
+                                            </button>
+                                        </>
+                                    )}
+                                    
+                                    {/* Image Indicators */}
+                                    <div className="absolute bottom-4 left-0 right-0 flex justify-center space-x-2">
+                                        {selectedPost.images.map((_, index) => (
+                                            <button
+                                                key={index}
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    setCurrentImageIndex(index);
+                                                }}
+                                                className={`w-2 h-2 rounded-full transition ${currentImageIndex === index ? 'bg-white w-4' : 'bg-white/50'}`}
+                                            />
+                                        ))}
                                     </div>
-                                ))
-                            ):
-                            (
-                                <Image
-                                    src={selectedPost.images[currentImageIndex].image}
-                                    alt={selectedPost.caption}
-                                    fill
-                                    className="object-cover"
-                                    sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
-                                />
+                                </>
                             )}
                         </div>
 

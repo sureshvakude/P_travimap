@@ -28,7 +28,7 @@ class PostCreateUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        fields = ['id', 'user', 'name', 'caption', 'images']
+        fields = ['id', 'user', 'name', 'caption', 'likes', 'images']
 
     def create(self, validated_data):
         images_data = validated_data.pop('images', [])
@@ -40,16 +40,20 @@ class PostCreateUpdateSerializer(serializers.ModelSerializer):
         return post
 
     def update(self, instance, validated_data):
-        images_data = validated_data.pop('images', [])
+        images_data = validated_data.pop('images', None)  # None instead of empty list
         
-        # Update post data
-        instance.name = validated_data.get('name', instance.name)
-        instance.caption = validated_data.get('caption', instance.caption)
-        instance.likes = validated_data.get('likes', instance.likes)
+        # Update post fields if they're in validated_data
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
         instance.save()
 
-        # Handle image updates if any
-        for image in images_data:
-            PostImage.objects.create(post=instance, image=image)
+        # Handle image updates only if images_data is provided
+        if images_data is not None:
+            # Clear existing images (optional - remove if you want to keep old images)
+            instance.images.all().delete()
+            
+            # Create new images
+            for image in images_data:
+                PostImage.objects.create(post=instance, image=image)
 
         return instance

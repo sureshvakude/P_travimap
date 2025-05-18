@@ -1,7 +1,8 @@
 from rest_framework import generics, filters
 from django_filters.rest_framework import DjangoFilterBackend
 from .models import Trip
-from .serializers import TripSerializer, TripCreateSerializer
+from .serializers import TripSerializer, TripCreateSerializer, TripUpdateSerializer
+from rest_framework.response import Response
 
 class TripListView(generics.ListAPIView):
     serializer_class = TripSerializer
@@ -18,8 +19,16 @@ class TripDetailView(generics.RetrieveAPIView):
     queryset = Trip.objects.all()
 
 class TripUpdateView(generics.UpdateAPIView):
-    serializer_class = TripCreateSerializer
+    serializer_class = TripUpdateSerializer
     queryset = Trip.objects.all()
+    http_method_names = ['patch']  # Only allow PATCH method
+
+    def patch(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        return Response(serializer.data)
 
 class TripDeleteView(generics.DestroyAPIView):
     serializer_class = TripSerializer

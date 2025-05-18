@@ -79,19 +79,8 @@ const ExplorePage = () => {
                     setSearchQuery={setSearchQuery}
                 />
 
-                {error && (
-                    <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 relative">
-                        {error}
-                        <button
-                            className="absolute top-0 right-0 px-2 py-1 text-red-700 hover:text-red-900 w-12 h-12 rounded-full"
-                            onClick={() => setError('')}>
-                            &times;
-                        </button>
-                    </div>
-                )}
-
                 {filteredPlaces && filteredPlaces.length > 0 ? (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
                         {filteredPlaces.map((place, index) => (
                             <div
                                 key={`${place.id}-${place.name}-${index}`}

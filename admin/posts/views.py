@@ -44,6 +44,10 @@ class PostCreateView(generics.CreateAPIView):
 class PostUpdateView(generics.UpdateAPIView):
     queryset = Post.objects.all()
     serializer_class = PostCreateUpdateSerializer
+    
+    def patch(self, request, *args, **kwargs):
+        kwargs['partial'] = True
+        return self.update(request, *args, **kwargs)
 
 # API to delete a post (flag change)
 class PostDeleteView(generics.DestroyAPIView):

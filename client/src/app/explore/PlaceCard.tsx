@@ -9,7 +9,7 @@ const PlaceCard = ({ place }: PlaceCardProps) => {
   // Get the first image or use a placeholder
   const mainImage = place.images.length > 0 
     ? place.images[0].image 
-    : '/default-explore.jpg';
+    : '/images/explore/default-explore.jpg';
 
   return (
     <div className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">

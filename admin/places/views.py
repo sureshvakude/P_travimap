@@ -1,8 +1,9 @@
-from rest_framework import generics, filters
+from rest_framework import generics, status
 from django.db.models import Q
 from .models import Place
 from .serializers import PlaceSerializer
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.response import Response
 
 class CustomPagination(PageNumberPagination):
     page_size = 20
@@ -40,3 +41,18 @@ class PlaceListView(generics.ListAPIView):
 class PlaceDetailView(generics.RetrieveAPIView):
     queryset = Place.objects.all()
     serializer_class = PlaceSerializer
+
+class PlaceUpdateView(generics.UpdateAPIView):
+    queryset = Place.objects.all()
+    serializer_class = PlaceSerializer
+    http_method_names = ['patch']  # Only allow PATCH method
+
+    def patch(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

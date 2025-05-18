@@ -4,7 +4,6 @@ import HeroSection from './HeroSection';
 import TravelDestinations from './TravelDestinations';
 import TravelTypes from './TravelTypes';
 import Testimonials from './Testimonials';
-import ContactSection from './ContactSection';
 import FeaturedDestinations from './FeaturedDestinations';
 
 const HomePage = () => {
@@ -16,7 +15,7 @@ const HomePage = () => {
         <TravelTypes />
         <FeaturedDestinations />
         <Testimonials />
-        <ContactSection />
+        {/* <ContactSection /> */}
       </main>
     </div>
   );

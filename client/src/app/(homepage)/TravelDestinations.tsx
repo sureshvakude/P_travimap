@@ -53,26 +53,6 @@ const TravelDestinations = () => {
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex flex-col justify-end p-6">
                 <h3 className="text-xl font-bold text-white mb-1">{destination.name}</h3>
                 <p className="text-gray-200 mb-4">{destination.description}</p>
-                <Link
-                  href={`/destinations/${destination.id}`}
-                  className="text-indigo-300 hover:text-white font-medium flex items-center"
-                >
-                  Explore
-                  <svg
-                    className="w-4 h-4 ml-2"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M14 5l7 7m0 0l-7 7m7-7H3"
-                    />
-                  </svg>
-                </Link>
               </div>
             </div>
           ))}
@@ -80,7 +60,7 @@ const TravelDestinations = () => {
 
         <div className="text-center mt-12">
           <Link
-            href="/destinations"
+            href="/explore"
             className="inline-block px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition font-medium"
           >
             View All Destinations

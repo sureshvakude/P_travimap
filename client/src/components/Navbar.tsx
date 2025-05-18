@@ -1,5 +1,6 @@
 'use client';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { useSession, signOut } from 'next-auth/react';
 
@@ -26,9 +27,15 @@ const Navbar = () => {
     >
       <div className="container mx-auto px-4 py-3 flex justify-between items-center">
         {/* Logo */}
-        <div className="flex items-center">
-          <Link href="/" className="text-2xl font-bold text-indigo-600">
-            TravelMap
+        <div className="flex items-center space-x-1">
+          <Image
+            src="/travimap_logo.png"
+            alt="logo"
+            width={40}
+            height={40}
+          />
+          <Link href="/" className='flex item-center text-gray-800 text-xl font-bold'>
+            Travimap
           </Link>
         </div>
 
@@ -70,9 +77,6 @@ const Navbar = () => {
                 <Link href="/profile" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">
                   Profile
                 </Link>
-                <Link href="/settings" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">
-                  Settings
-                </Link>
                 <button onClick={() => signOut()} className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100">
                   Logout
                 </button>
@@ -104,46 +108,48 @@ const Navbar = () => {
       </div>
 
       {/* Mobile Menu */}
-      {mobileMenuOpen && (
-        <div className="md:hidden bg-white shadow-lg py-2 px-4">
-          <nav className="flex flex-col space-y-3">
-            <Link href="/explore" className="text-gray-700 hover:text-indigo-600 transition py-2">
-              Explore
-            </Link>
-            <Link href="/trips" className="text-gray-700 hover:text-indigo-600 transition py-2">
-              Trips
-            </Link>
-            <Link href="/gallery" className="text-gray-700 hover:text-indigo-600 transition py-2">
-              Gallery
-            </Link>
-          </nav>
-          <div className="mt-4 pt-4 border-t border-gray-200">
-            {!isLoggedIn ? (
-              <div className="flex flex-col space-y-3">
-                <Link href="/signin" className="text-gray-700 hover:text-indigo-600 transition py-2">
-                  Sign In
-                </Link>
-                <Link
-                  href="/signup"
-                  className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition text-center"
-                >
-                  Sign Up
-                </Link>
-              </div>
-            ) : (
-              <div className="flex flex-col space-y-3">
-                <Link href="/profile" className="text-gray-700 hover:text-indigo-600 transition py-2">
-                  Profile
-                </Link>
-                <button onClick={() => signOut()} className="text-left text-gray-700 hover:text-indigo-600 transition py-2">
-                  Logout
-                </button>
-              </div>
-            )}
+      {
+        mobileMenuOpen && (
+          <div className="md:hidden bg-white shadow-lg py-2 px-4">
+            <nav className="flex flex-col space-y-3">
+              <Link href="/explore" className="text-gray-700 hover:text-indigo-600 transition py-2">
+                Explore
+              </Link>
+              <Link href="/trips" className="text-gray-700 hover:text-indigo-600 transition py-2">
+                Trips
+              </Link>
+              <Link href="/gallery" className="text-gray-700 hover:text-indigo-600 transition py-2">
+                Gallery
+              </Link>
+            </nav>
+            <div className="mt-4 pt-4 border-t border-gray-200">
+              {!isLoggedIn ? (
+                <div className="flex flex-col space-y-3">
+                  <Link href="/signin" className="text-gray-700 hover:text-indigo-600 transition py-2">
+                    Sign In
+                  </Link>
+                  <Link
+                    href="/signup"
+                    className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition text-center"
+                  >
+                    Sign Up
+                  </Link>
+                </div>
+              ) : (
+                <div className="flex flex-col space-y-3">
+                  <Link href="/profile" className="text-gray-700 hover:text-indigo-600 transition py-2">
+                    Profile
+                  </Link>
+                  <button onClick={() => signOut()} className="text-left text-gray-700 hover:text-indigo-600 transition py-2">
+                    Logout
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
-        </div>
-      )}
-    </header>
+        )
+      }
+    </header >
   );
 };
 
