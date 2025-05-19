@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { Place, PlacesApiResponse } from '@/utils/explore/type/place';
-import { getAllPlaces } from '@/utils/explore/api/get-all-places';
+import { getAllPlaces } from '@/utils/explore/api/get-all';
 import PlaceCard from './PlaceCard';
 import SearchBar from './SearchBar';
 import LoadingSpinner from './LoadingSpinner';

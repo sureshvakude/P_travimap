@@ -5,7 +5,7 @@ import { useSession } from 'next-auth/react';
 import { getSingleUser } from '@/utils/users/api/get-single';
 import { getUserTrips } from '@/utils/trips/api/get-user-trip';
 import { joinTrip } from '@/utils/trips/api/join-trip';
-import { getAllPosts } from '@/utils/posts/api/get-all-posts';
+import { getAllPosts } from '@/utils/posts/api/get-all';
 import { Trip } from '@/utils/trips/types/trips';
 import { Post } from '@/utils/posts/types/posts';
 import { user } from '@/utils/users/types/user-login';

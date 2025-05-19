@@ -1,9 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { getAllPosts } from '@/utils/posts/api/get-all-posts';
+import { getAllPosts } from '@/utils/posts/api/get-all';
 import { Post } from '@/utils/posts/types/posts';
-import { getPostById } from '@/utils/posts/api/get-post';
+import { getPostById } from '@/utils/posts/api/get-single';
 import { HeartIcon, ChatBubbleOvalLeftIcon, XMarkIcon, ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import { HeartIcon as HeartIconSolid } from '@heroicons/react/24/solid';
 import Image from 'next/image';
